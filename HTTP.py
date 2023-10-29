@@ -4,7 +4,6 @@ def Get(URL):
     connection = http.client.HTTPSConnection(URL)
     connection.request("GET", "/")
     response = connection.getresponse()
-    
     response_string = ""
     try:
         response_string = response.read().decode()
@@ -13,4 +12,4 @@ def Get(URL):
     
     return response_string
 
-# print(Get("www.example.com"))
+# print(Get("https://www.iana.org/domains/example"))
