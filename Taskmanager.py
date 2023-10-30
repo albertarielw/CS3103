@@ -48,12 +48,12 @@ class TaskManager:
             # apply the partial function to all seed values, this call is async
             map(partial_func, self.seed) 
         
-            while self.queue.not_empty: 
+            while self.queue.not_empty(): 
                 # Check if it has timed out 
                 if self.timed_out():
                     break 
 
-                result = self.queue.get() 
+                result = self.queue.get(timeout=self.timeout) 
                 
                 # TODO: Store the result
                 self.conn.store(result)
