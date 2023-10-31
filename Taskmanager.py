@@ -1,5 +1,5 @@
 from multiprocessing import Pool, Queue, Value
-from typing import Callable, List
+from typing import Callable, List, Optional
 from functools import partial
 from dataclasses import dataclass
 from DB import Database, FileDB
@@ -22,7 +22,6 @@ class TaskResult:
     ip_addr: str
     geolocation: str
     next_urls: List[str]
-    html_file: str
     rtt: float
 
 
@@ -37,7 +36,7 @@ class TaskManager:
     def __init__(
         self,
         db: Database,
-        function: Callable[[str], TaskResult],
+        function: Callable[[str], Optional[TaskResult]],
         seed: list[str],
         timeout: float = 10,
         num_procs: int = 10,
@@ -62,12 +61,10 @@ class TaskManager:
     def _callback(self, result):
         print(f"Callback: {result}", flush=True)
         self.queue.put(result)
-    
+
     def _add_tasks(self, pool: Pool, tasks: List[str]) -> None:
         for task in tasks:
-            pool.apply_async(
-                self.function, args=(task,), callback=self._callback
-            )
+            pool.apply_async(self.function, args=(task,), callback=self._callback)
 
     def start(self):
         """
@@ -79,6 +76,7 @@ class TaskManager:
             self._add_tasks(task_pool, self.seed)
 
             while self.finished < self.running:
+                print("loop")
                 # Check if it has timed out
                 if self.timed_out():
                     break

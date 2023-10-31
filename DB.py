@@ -44,7 +44,7 @@ class FileDB(Database):
             for key, value in self.data.items():
                 f.write(f"{key}{self.delimiter}{value}\n")
 
-    def get(self, key):
+    def get(self, key: str):
         return self.data.get(key)
 
     def set(self, key, value):
