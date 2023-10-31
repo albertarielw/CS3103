@@ -41,6 +41,6 @@ class Webcrawler():
         pass
 
 
-URLToVisit = ["www.example.com"]
+URLToVisit = ["https://www.example.com"]
 webcrawler = Webcrawler(URLToVisit=URLToVisit)
 webcrawler.start()

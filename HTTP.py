@@ -1,15 +1,10 @@
-import http.client
+import requests
 
 def Get(URL):
-    connection = http.client.HTTPSConnection(URL)
-    connection.request("GET", "/")
-    response = connection.getresponse()
+    response = requests.get(URL)
     response_string = ""
     try:
-        response_string = response.read().decode()
+        response_string = response.content.decode()
     except Exception as e:
         print("Error in decoding response:", e)
-    
     return response_string
-
-# print(Get("https://www.iana.org/domains/example"))
