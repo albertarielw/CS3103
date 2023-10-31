@@ -62,6 +62,12 @@ class TaskManager:
     def _callback(self, result):
         print(f"Callback: {result}", flush=True)
         self.queue.put(result)
+    
+    def _add_tasks(self, pool: Pool, tasks: List[str]) -> None:
+        for task in tasks:
+            pool.apply_async(
+                self.function, args=(task,), callback=self._callback
+            )
 
     def start(self):
         """
@@ -70,11 +76,7 @@ class TaskManager:
         """
         with Pool(self.num_procs) as task_pool:
             # map doesn't work somehow
-            for url in self.seed:
-                # callback handles sending to queue
-                task_pool.apply_async(
-                    self.function, args=(url,), callback=self._callback
-                )
+            self._add_tasks(task_pool, self.seed)
 
             while self.finished < self.running:
                 # Check if it has timed out
@@ -92,11 +94,7 @@ class TaskManager:
                 self.task_id += 1
 
                 # Process next urls
-                for url in result.next_urls:
-                    task_pool.apply_async(
-                        self.function, args=(url,), callback=self._callback
-                    )
-
+                self._add_tasks(task_pool, result.next_urls)
                 self.finished += 1
                 self.running += len(result.next_urls)
 
