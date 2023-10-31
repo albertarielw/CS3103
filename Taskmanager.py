@@ -87,7 +87,7 @@ class TaskManager:
                 )
                 self.db.set(
                     self.task_id,
-                    f"{result.url},{result.ip_addr},{result.geolocation},{result.rtt}",
+                    f"{result.url};;{result.ip_addr};;{result.geolocation};;{result.rtt}",
                 )
                 self.task_id += 1
 

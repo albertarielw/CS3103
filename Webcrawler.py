@@ -1,9 +1,13 @@
 import socket
+from urllib import parse
+from ip2geotools.databases.noncommercial import DbIpCity
+from geopy.distance import distance
 from HTTP import Get
 from HTMLParser import HTMLParser
 from collections import deque
 from Taskmanager import TaskResult
 from typing import Optional
+import time
 
 
 class Webcrawler:
@@ -17,30 +21,33 @@ class Webcrawler:
 
         print("crawling: ", url)
 
-        HTML = ""
+        html = ""
         try:
-            HTML = Get(url)
+            start_time = time.time()
+            html = Get(url)
+            end_time = time.time()
         except Exception as e:
             print("Error in Get:", e)
             return None
 
-        myHTMLParser = HTMLParser(HTML)
+        myHTMLParser = HTMLParser(html)
         next_urls = myHTMLParser.GetLinks()
 
         soup = myHTMLParser.GetSoup()
         # analyze(soup)
-        print(self.get_ip_addr(url))
+        ip_addr = self.get_ip_addr(url)
+        address_info = DbIpCity.get(ip_addr, api_key="free")
         self.visited_urls.add(url)
         return TaskResult(
             url=url,
-            ip_addr="",
-            geolocation="",
+            ip_addr=address_info.ip_address,
+            geolocation=f"{address_info.city}, {address_info.region}, {address_info.country}",
             next_urls=next_urls,
-            rtt=1.0,
+            rtt=round(end_time-start_time, 3),
         )
 
     def get_ip_addr(self, url: str) -> str:
-        return socket.gethostbyname(url)
+        return socket.gethostbyname(parse.urlparse(url).hostname)
 
     def analyze(self, soup):
         # TODO for stevan
