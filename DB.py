@@ -1,10 +1,11 @@
 import os
 from abc import ABC, abstractmethod
+from typing import List
 
 
 class Database(ABC):
     @abstractmethod
-    def get(self, key):
+    def get(self, key) -> str:
         pass
 
     @abstractmethod
@@ -16,7 +17,7 @@ class Database(ABC):
         pass
 
     @abstractmethod
-    def list_keys(self):
+    def list_keys(self) -> List[str]:
         pass
 
 
@@ -35,7 +36,7 @@ class FileDB(Database):
             with open(self.filename, "r") as f:
                 for line in f:
                     key, value = line.strip().split(self.delimiter, 1)
-                    data[key] = value
+                    data[int(key)] = value
         return data
 
     def _write_file(self):
