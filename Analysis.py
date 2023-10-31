@@ -13,27 +13,27 @@ class Analysis():
 
     def analyseJobType(self):
         isFullTime = False
-        for keyword in JobType.FULLTIME_KEYWORDS:
+        for keyword in JobType.FULLTIME_KEYWORDS.value:
             if keyword in self.input:
                 isFullTime = True
                 break
         
         isPartTime = False
-        for keyword in JobType.PARTTIME_KEYWORDS:
+        for keyword in JobType.PARTTIME_KEYWORDS.value:
             if keyword in self.input:
                 isPartTime = True
                 break
 
         if isFullTime and isPartTime:
-            self.analysisJobType["both"] += 1
+            self.analysisJobType[JobType.BOTH] += 1
             return
         
         if isFullTime:
-            self.analysisJobType["full-time"] += 1
+            self.analysisJobType[JobType.FULLTIME] += 1
             return
 
         if isPartTime:
-            self.analysisJobType["part-time"] += 1
+            self.analysisJobType[JobType.PARTTIME] += 1
             return
 
     def printAnalysis(self):
@@ -44,8 +44,8 @@ class JobType(Enum):
     PARTTIME = "PARTIME"
     BOTH = "BOTH"
 
-    FULLTIME_KEYWORDS = ["full time", "fulltime", "full-time"]
-    PARTTIME_KEYWORDS = ["part time", "parttime", "part-time"]
+    FULLTIME_KEYWORDS = ("full time", "fulltime", "full-time")
+    PARTTIME_KEYWORDS = ("part time", "parttime", "part-time")
 
 ### TEST ###
 
@@ -56,7 +56,7 @@ soup = htmlParser.GetSoup()
 text = soup.get_text()
 
 analysis = Analysis(text)
-print(analysis.input)
+# print(analysis.input)
 
 analysis.analyseJobType()
 analysis.printAnalysis()
