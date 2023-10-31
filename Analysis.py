@@ -8,7 +8,7 @@ class Analysis():
 
         self.analysisJobRole = {JobRole.SOFTWARE_ENGINEER: 0, JobRole.QUALITY_ASSURANCE: 0, JobRole.DATA_SCIENTIST: 0, JobRole.WEB_DEVELOPER: 0, JobRole.FRONT_END: 0, JobRole.BACK_END: 0, JobRole.FULLSTACK: 0, JobRole.RESEARCH: 0, JobRole.NETWORKING: 0, JobRole.TEST_ENGINEER: 0, JobRole.ML_ENGINEER: 0, JobRole.AI_ENGINEER: 0}
         self.analysisRequiredDegree = {RequiredDegree.NONE_REQUIRED: 0, RequiredDegree.BACHELOR:0, RequiredDegree.GRADUATE:0, RequiredDegree.MASTER:0, RequiredDegree.PHD:0}
-        #self.analysisJobTechSkills = {"java":0, "js":0, "c++":0, "ocaml":0, "python", "sql", "PHP", "linux", "numpy", "pytorch", "react", "node.js", "vim", "assembly", }
+        self.analysisTechSkills = {TechSkill.JAVA: 0, TechSkill.JAVASCRIPT: 0, TechSkill.CPP: 0, TechSkill.PYTHON: 0, TechSkill.SQL: 0, TechSkill.RUBY: 0, TechSkill.PHP: 0, TechSkill.LINUX: 0, TechSkill.FIGMA: 0, TechSkill.NUMPY: 0, TechSkill.PYTORCH: 0, TechSkill.REACTJS: 0, TechSkill.VIM: 0, TechSkill.ASSEMBLY: 0, TechSkill.CSS: 0}
         self.jobSoftSkills = {"collaborative", "team_player", "independent", "can do", "proactive", "english", "mandarin", "problem solving", "adaptive", "leadership"}
         self.analysisJobLevel = {JobLevel.INTERN: 0, JobLevel.SENIOR: 0, JobLevel.JUNIOR: 0, JobLevel.EXECUTIVE: 0}
         self.analysisJobType = {JobType.FULLTIME: 0, JobType.PARTTIME: 0, JobType.BOTH: 0}
@@ -249,6 +249,147 @@ class Analysis():
             self.analysisJobRole[JobRole.NETWORKING] = 1
             return
     
+    def analyseJobRole(self):
+        isJAVA = False
+        for keyword in TechSkill.JAVA.value:
+            if keyword in self.input:
+                isJAVA = True
+                break
+
+        isJS = False
+        for keyword in TechSkill.JAVASCRIPT.value:
+            if keyword in self.input:
+                isJS = True
+                break
+
+        isCPP = False
+        for keyword in TechSkill.CPP.value:
+            if keyword in self.input:
+                isCPP = True
+                break
+
+        isPython = False
+        for keyword in TechSkill.PYTHON.value:
+            if keyword in self.input:
+                isPython = True
+                break
+
+        isSQL = False
+        for keyword in TechSkill.SQL.value:
+            if keyword in self.input:
+                isSQL = True
+                break
+
+        isRuby = False
+        for keyword in TechSkill.RUBY.value:
+            if keyword in self.input:
+                isRuby = True
+                break
+
+        isPHP = False
+        for keyword in TechSkill.PHP.value:
+            if keyword in self.input:
+                isPHP = True
+                break
+
+        isLINUX = False
+        for keyword in TechSkill.LINUX.value:
+            if keyword in self.input:
+                isLInux = True
+                break
+
+        isFigma = False
+        for keyword in TechSkill.FIGMA.value:
+            if keyword in self.input:
+                isFigma = True
+                break
+
+        isNumpy = False
+        for keyword in TechSkill.NUMPY.value:
+            if keyword in self.input:
+                isNumpy = True
+                break
+
+        isPytorch = False
+        for keyword in TechSkill.PYTORCH.value:
+            if keyword in self.input:
+                isPytorch = True
+                break
+
+        isReact = False
+        for keyword in TechSkill.REACTJS.value:
+            if keyword in self.input:
+                isReact = True
+                break
+
+        isVIM = False
+        for keyword in TechSkill.VIM.value:
+            if keyword in self.input:
+                isVIM = True
+                break
+
+        isAssembly = False
+        for keyword in TechSkill.ASSEMBLY.value:
+            if keyword in self.input:
+                isAssembly = True
+                break
+
+        isCSS = False
+        for keyword in TechSkill.CSS.value:
+            if keyword in self.input:
+                isCSS = True
+                break
+
+
+        if isJava:
+            self.analysisTechSkills[TechSkill.JAVA] = 1
+        
+        if isJS:
+            self.analysisTechSkills[TechSkill.JS] = 1
+        
+        if isCPP:
+            self.analysisTechSkills[TechSkill.CPP] = 1
+        
+        if isPython:
+            self.analysisTechSkills[TechSkill.PYTHON] = 1
+        
+        if isSQL:
+            self.analysisTechSkills[TechSkill.SQL] = 1
+        
+        if isRuby:
+            self.analysisTechSkills[TechSkill.RUBY] = 1
+        
+        if isPHP:
+            self.analysisTechSkills[TechSkill.PHP] = 1
+        
+        if isLinux:
+            self.analysisTechSkills[TechSkill.LINUX] = 1
+        
+        if isFigma:
+            self.analysisTechSkills[TechSkill.FIGMA] = 1
+        
+        if isNumpy:
+            self.analysisTechSkills[TechSkill.NUMPY] = 1
+        
+        if isPytorch:
+            self.analysisTechSkills[TechSkill.PYTORCH] = 1
+        
+        if isReact:
+            self.analysisTechSkills[TechSkill.REACTJS] = 1
+        
+        if isVIM:
+            self.analysisTechSkills[TechSkill.VIM] = 1
+        
+        if isAssembly:
+            self.analysisTechSkills[TechSkill.ASSEMBLY] = 1
+        
+        if isCSS:
+            self.analysisTechSkills[TechSkill.CSS] = 1
+        
+        
+        
+
+        
     def print(self):
         print(self.input)
 
@@ -319,6 +460,39 @@ class JobRole(Enum):
     ML_KEYWORDS = ("machinelearning", "ml")
     AI_KEYWORDS = ("artificialintelligence", "ai")
 
+
+class TechSkill(Enum):
+    JAVA = "Java"
+    JAVASCRIPT = "JS"
+    CPP = "CPP"
+    PYTHON = "Python"
+    SQL = "SQL"
+    RUBY = "Ruby"
+    PHP = "PHP"
+    LINUX = "Linux"
+    FIGMA = "Figma"
+    NUMPY = "Numpy"
+    PYTORCH = "Pytorch"
+    REACTJS = "React"
+    VIM = "VIM"
+    ASSEMBLY = "Assembly"
+    CSS = "css"
+
+    JAVA_KEYWORDS = ("java")
+    JS_KEYWORDS = ("js", "javascript")
+    CPP_KEYWORDS = ("c++", "cpp")
+    PYTHON_KEYWORDS = ("python")
+    SQL_KEYWORDS = ("sql")
+    RUBY_KEYWORDS = ("ruby")
+    PHP_KEYWORDS = ("php")
+    LINUX_KEYWORDS = ("linux")
+    FIGMA_KEYWORDS = ("figma")
+    NUMPY_KEYWORDS = ("numpy")
+    PYTORCH_KEYWORDS = ("pytorch")
+    REACT_KEYWORDS = ("react", "react.js")
+    VIM_KEYWORDS = ("vim")
+    ASSEMBLY_KEYWORDS = ("assembly")
+    CSS_KEYWORDS = ("css")
 
 ### TEST ###
 
