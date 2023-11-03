@@ -2,6 +2,7 @@ from HTTP import Get
 from HTMLParser import HTMLParser
 from enum import Enum
 from abc import ABC, abstractmethod
+import re
 
 class KeywordAnalysis():
     def __init__(self, mapping):
@@ -13,7 +14,7 @@ class KeywordAnalysis():
         for key in self.mapping.value.keys():
             initial_analysis[key] = 0
         return initial_analysis
-    
+
     def runAnalysis(self, input):
         for key, keywords in self.mapping.value.items():
             if type(keywords) == type(""):
@@ -138,6 +139,7 @@ class Analysis():
     def __init__(self, input):
         self.input = self.parseInput(input)
         self.keywordAnalysis = self._runKeywordAnalysis()
+        self.salary = None
 
     def parseInput(self, input):
         return input.lower().replace("\n", " ")
@@ -155,6 +157,8 @@ class Analysis():
         for key, value in mapping.items():
             value.runAnalysis(self.input)
             result[key.value] = value.analysis
+        self.salary = re.findall("\$\d+(?:,\d+)*(?:\.\d+)?[KMkkmMm]?|-?\$\d+(?:,\d+)*(?:-\d+)?[KMkkmMm]?",text)
+        print(self.salary)
 
         return result
     
