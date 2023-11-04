@@ -6,11 +6,6 @@ from DB import Database, FileDB
 import time
 
 
-def result_callback(result, queue):
-    print(result, queue)
-    print(f"Callback got: {result}", flush=True)
-
-
 @dataclass
 class TaskResult:
     """
@@ -62,9 +57,18 @@ class TaskManager:
         print(f"Callback: {result}", flush=True)
         self.queue.put(result)
 
+    def _error_callback(self, e):
+        print("error in callback:", e)
+        raise e
+
     def _add_tasks(self, pool: Pool, tasks: List[str]) -> None:
         for task in tasks:
-            pool.apply_async(self.function, args=(task,), callback=self._callback)
+            pool.apply_async(
+                self.function,
+                args=(task,),
+                callback=self._callback,
+                error_callback=self._error_callback,
+            )
 
     def start(self):
         """
@@ -76,7 +80,6 @@ class TaskManager:
             self._add_tasks(task_pool, self.seed)
 
             while self.finished < self.running:
-                print("loop")
                 # Check if it has timed out
                 if self.timed_out():
                     break
