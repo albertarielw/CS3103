@@ -1,7 +1,6 @@
 from HTTP import Get
 from HTMLParser import HTMLParser
 from enum import Enum
-from abc import ABC, abstractmethod
 import re
 
 class KeywordAnalysis():
@@ -20,7 +19,7 @@ class KeywordAnalysis():
             if type(keywords) == type(""):
                 if keywords in input:
                     self.analysis[key] = 1
-                    break
+                    continue
             else:
                 for keyword in keywords:
                     if keyword in input:
@@ -28,11 +27,11 @@ class KeywordAnalysis():
                         break
 
 class KeywordAnalysisKeyEnum(Enum):
-    JOBTYPE = "JOB_TYPE"
-    JOBLEVEL = "JOB_LEVEL"
-    REQUIREDDEGREE = "REQUIRED_DEGREE"
-    JOBROLE = "JOB_ROLE"
-    TECHSKILL = "TECH_SKILL"
+    JOB_TYPE = "JOB_TYPE"
+    JOB_LEVEL = "JOB_LEVEL"
+    REQUIRED_DEGREE = "REQUIRED_DEGREE"
+    JOB_ROLE = "JOB_ROLE"
+    TECHNICAL_SKILL = "TECH_SKILL"
 
 class JobTypeEnum(Enum):
     FULLTIME = "Full Time"
@@ -44,7 +43,7 @@ class JobTypeEnum(Enum):
     MAPPING = {FULLTIME: FULLTIME_KEYWORDS, PARTTIME: PARTTIME_KEYWORDS}
 
 class JobLevelEnum(Enum):
-    INTERN = "Internship"
+    INTERN = "Intern"
     JUNIOR = "Junior"
     SENIOR = "Senior"
     EXECUTIVE = "Executive"
@@ -63,31 +62,31 @@ class RequiredDegreeEnum(Enum):
     MASTER = "MASTER"
     PHD = "PHD"
 
-    NONE_KEYWORDS = ("nodegree")
-    BACHELOR_KEYWORDS = ("bachelor", "ongoing", "currentstudent")
+    NONE_KEYWORDS = ("nodegree", "no degree")
+    BACHELOR_KEYWORDS = ("bachelor", "ongoing", "currentstudent", "current student")
     GRADUATE_KEYWORDS = ("graduate", "graduated")
     MASTER_KEYWORDS = ("master")
-    PHD_KEYWORDS = ("phd", "doctorate", "doctorofphilosophy")
+    PHD_KEYWORDS = ("phd", "doctorate", "doctorofphilosophy", "doctor of philosophy")
 
     MAPPING = {NONE_REQUIRED: NONE_KEYWORDS, BACHELOR: BACHELOR_KEYWORDS, GRADUATE: GRADUATE_KEYWORDS, MASTER: MASTER_KEYWORDS, PHD: PHD_KEYWORDS}
 
 class JobRoleEnum(Enum):
-    SOFTWARE_ENGINEER = "SoftEng"
-    QUALITY_ASSURANCE = "QA"
-    DATA_SCIENTIST = "DS"
-    WEB_DEVELOPER = "WebDev"
-    FRONT_END = "Front End"
-    BACK_END = "Back End"
-    FULLSTACK = "Fullstack"
+    SOFTWARE_ENGINEER = "Software Engineer"
+    QUALITY_ASSURANCE = "Quality Assurance"
+    DATA_SCIENTIST = "Data Scientist"
+    WEB_DEVELOPER = "Web Developer"
+    FRONTEND = "Frontend"
+    BACKEND = "Backend"
+    FULLSTACK = "Full Stack"
     RESEARCH = "Research"
     NETWORKING = "Networking"
     TEST_ENGINEER = "Test Engineer"
     ML_ENGINEER = "ML"
     AI_ENGINEER = "AI"
 
-    SE_KEYWORDS = ("softeng", "softwareengineer", "softwaredeveloper")
-    QA_KEYWORDS = ("qa", "qualityassurance")
-    DS_KEYWORDS = ("dataengineer", "dataanalyst")
+    SOFTWARE_ENGINEER_KEYWORDS = ("softeng", "softwareengineer", "softwaredeveloper")
+    QUALITY_ASSURANCE_KEYWORDS = ("qa", "qualityassurance")
+    DATA_SCIENTIST_KEYWORDS = ("dataengineer", "dataanalyst")
     WEBDEV_KEYWORDS = ("webdeveloper", "website", "webdev")
     FRONTEND_KEYWORDS = ("frontend", "front-end")
     BACKEND_KEYWORDS = ("backend", "back-end")
@@ -95,12 +94,12 @@ class JobRoleEnum(Enum):
     RESEARCH_KEYWORDS = ("research", "r&d", "rnd")
     NETWORKING_KEYWORDS = ("networking", "tcp", "ip", "protocol", "http")
     TESTING_KEYWORDS = ("testing", "testcase", "test")
-    ML_KEYWORDS = ("machinelearning", "ml")
-    AI_KEYWORDS = ("artificialintelligence", "ai")
+    ML_ENGINEER_KEYWORDS = ("machinelearning", "ml")
+    AI_ENGINEER_KEYWORDS = ("artificialintelligence", "ai")
 
-    MAPPING = {SOFTWARE_ENGINEER: SE_KEYWORDS, QUALITY_ASSURANCE: QA_KEYWORDS, DATA_SCIENTIST: DS_KEYWORDS, WEB_DEVELOPER: WEBDEV_KEYWORDS, FRONT_END: FRONTEND_KEYWORDS, BACK_END: BACKEND_KEYWORDS, FULLSTACK: FULLSTACK_KEYWORDS, RESEARCH: RESEARCH_KEYWORDS, NETWORKING: NETWORKING_KEYWORDS, TEST_ENGINEER: TESTING_KEYWORDS, ML_ENGINEER: ML_KEYWORDS, AI_ENGINEER: AI_KEYWORDS}
+    MAPPING = {SOFTWARE_ENGINEER: SOFTWARE_ENGINEER_KEYWORDS, QUALITY_ASSURANCE: QUALITY_ASSURANCE_KEYWORDS, DATA_SCIENTIST: DATA_SCIENTIST_KEYWORDS, WEB_DEVELOPER: WEBDEV_KEYWORDS, FRONTEND: FRONTEND_KEYWORDS, BACKEND: BACKEND_KEYWORDS, FULLSTACK: FULLSTACK_KEYWORDS, RESEARCH: RESEARCH_KEYWORDS, NETWORKING: NETWORKING_KEYWORDS, TEST_ENGINEER: TESTING_KEYWORDS, ML_ENGINEER: ML_ENGINEER_KEYWORDS, AI_ENGINEER: AI_ENGINEER_KEYWORDS}
 
-class TechSkillEnum(Enum):
+class TechnicalSkillEnum(Enum):
     JAVA = "Java"
     JAVASCRIPT = "JS"
     CPP = "CPP"
@@ -112,13 +111,13 @@ class TechSkillEnum(Enum):
     FIGMA = "Figma"
     NUMPY = "Numpy"
     PYTORCH = "Pytorch"
-    REACTJS = "React"
+    REACTJS = "ReactJS"
     VIM = "VIM"
     ASSEMBLY = "Assembly"
     CSS = "css"
 
     JAVA_KEYWORDS = ("java")
-    JS_KEYWORDS = ("js", "javascript")
+    JAVASCRIPT_KEYWORDS = ("js", "javascript")
     CPP_KEYWORDS = ("c++", "cpp")
     PYTHON_KEYWORDS = ("python")
     SQL_KEYWORDS = ("sql")
@@ -128,12 +127,12 @@ class TechSkillEnum(Enum):
     FIGMA_KEYWORDS = ("figma")
     NUMPY_KEYWORDS = ("numpy")
     PYTORCH_KEYWORDS = ("pytorch")
-    REACT_KEYWORDS = ("react", "react.js")
+    REACT_KEYWORDS = ("react")
     VIM_KEYWORDS = ("vim")
     ASSEMBLY_KEYWORDS = ("assembly")
     CSS_KEYWORDS = ("css")
 
-    MAPPING = {JAVA: JAVA_KEYWORDS, JAVASCRIPT: JS_KEYWORDS, CPP: CPP_KEYWORDS, PYTHON: PYTHON_KEYWORDS, SQL: SQL_KEYWORDS, RUBY: RUBY_KEYWORDS, PHP: PHP_KEYWORDS, LINUX: LINUX_KEYWORDS, FIGMA: FIGMA_KEYWORDS, NUMPY: NUMPY_KEYWORDS, PYTORCH: PYTHON_KEYWORDS, REACTJS: REACT_KEYWORDS, VIM: VIM_KEYWORDS, ASSEMBLY: ASSEMBLY_KEYWORDS, CSS: CSS_KEYWORDS}
+    MAPPING = {JAVA: JAVA_KEYWORDS, JAVASCRIPT: JAVASCRIPT_KEYWORDS, CPP: CPP_KEYWORDS, PYTHON: PYTHON_KEYWORDS, SQL: SQL_KEYWORDS, RUBY: RUBY_KEYWORDS, PHP: PHP_KEYWORDS, LINUX: LINUX_KEYWORDS, FIGMA: FIGMA_KEYWORDS, NUMPY: NUMPY_KEYWORDS, PYTORCH: PYTHON_KEYWORDS, REACTJS: REACT_KEYWORDS, VIM: VIM_KEYWORDS, ASSEMBLY: ASSEMBLY_KEYWORDS, CSS: CSS_KEYWORDS}
 
 class Analysis():
     def __init__(self, input):
@@ -148,17 +147,17 @@ class Analysis():
         result = {}
 
         mapping = {}
-        mapping[KeywordAnalysisKeyEnum.JOBTYPE] = KeywordAnalysis(JobTypeEnum.MAPPING)
-        mapping[KeywordAnalysisKeyEnum.JOBLEVEL] = KeywordAnalysis(JobLevelEnum.MAPPING)
-        mapping[KeywordAnalysisKeyEnum.REQUIREDDEGREE] = KeywordAnalysis(RequiredDegreeEnum.MAPPING)
-        mapping[KeywordAnalysisKeyEnum.JOBROLE] = KeywordAnalysis(JobRoleEnum.MAPPING)
-        mapping[KeywordAnalysisKeyEnum.TECHSKILL] = KeywordAnalysis(TechSkillEnum.MAPPING)
+        mapping[KeywordAnalysisKeyEnum.JOB_TYPE] = KeywordAnalysis(JobTypeEnum.MAPPING)
+        mapping[KeywordAnalysisKeyEnum.JOB_LEVEL] = KeywordAnalysis(JobLevelEnum.MAPPING)
+        mapping[KeywordAnalysisKeyEnum.JOB_ROLE] = KeywordAnalysis(JobRoleEnum.MAPPING)
+        mapping[KeywordAnalysisKeyEnum.REQUIRED_DEGREE] = KeywordAnalysis(RequiredDegreeEnum.MAPPING)
+        mapping[KeywordAnalysisKeyEnum.TECHNICAL_SKILL] = KeywordAnalysis(TechnicalSkillEnum.MAPPING)
 
         for key, value in mapping.items():
             value.runAnalysis(self.input)
             result[key.value] = value.analysis
-        self.salary = re.findall("\$\d+(?:,\d+)*(?:\.\d+)?[KMkkmMm]?|-?\$\d+(?:,\d+)*(?:-\d+)?[KMkkmMm]?",text)
-        print(self.salary)
+        # self.salary = re.findall("\$\d+(?:,\d+)*(?:\.\d+)?[KMkkmMm]?|-?\$\d+(?:,\d+)*(?:-\d+)?[KMkkmMm]?",text)
+        # print(self.salary)
 
         return result
     
