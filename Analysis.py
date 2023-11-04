@@ -3,6 +3,37 @@ from HTMLParser import HTMLParser
 from enum import Enum
 import re
 
+class Analysis():
+    def __init__(self, input):
+        self.input = self.parseInput(input)
+        self.keywordAnalysis = self._runKeywordAnalysis()
+        self.salary = None
+
+    def parseInput(self, input):
+        return input.lower().replace("\n", " ")
+
+    def _runKeywordAnalysis(self):
+        result = {}
+
+        mapping = {}
+        mapping[KeywordAnalysisKeyEnum.JOB_TYPE] = KeywordAnalysis(JobTypeEnum.MAPPING)
+        mapping[KeywordAnalysisKeyEnum.JOB_LEVEL] = KeywordAnalysis(JobLevelEnum.MAPPING)
+        mapping[KeywordAnalysisKeyEnum.JOB_ROLE] = KeywordAnalysis(JobRoleEnum.MAPPING)
+        mapping[KeywordAnalysisKeyEnum.REQUIRED_DEGREE] = KeywordAnalysis(RequiredDegreeEnum.MAPPING)
+        mapping[KeywordAnalysisKeyEnum.PROGRAMMING_LANGUAGE] = KeywordAnalysis(ProgrammingLanguageEnum.MAPPING)
+        mapping[KeywordAnalysisKeyEnum.FRAMEWORK] = KeywordAnalysis(FrameworkEnum.MAPPING)
+
+        for key, value in mapping.items():
+            value.runAnalysis(self.input)
+            result[key.value] = value.analysis
+        # self.salary = re.findall("\$\d+(?:,\d+)*(?:\.\d+)?[KMkkmMm]?|-?\$\d+(?:,\d+)*(?:-\d+)?[KMkkmMm]?",text)
+        # print(self.salary)
+
+        return result
+    
+    def printKeywordAnalysis(self):
+        print(self.keywordAnalysis)
+
 class KeywordAnalysis():
     def __init__(self, mapping):
         self.mapping = mapping
@@ -421,37 +452,6 @@ class ProgrammingLanguageEnum(Enum):
         PROLOG: PROLOG_KEYWORDS,
         ADA: ADA_KEYWORDS,
     }
-
-class Analysis():
-    def __init__(self, input):
-        self.input = self.parseInput(input)
-        self.keywordAnalysis = self._runKeywordAnalysis()
-        self.salary = None
-
-    def parseInput(self, input):
-        return input.lower().replace("\n", " ")
-
-    def _runKeywordAnalysis(self):
-        result = {}
-
-        mapping = {}
-        mapping[KeywordAnalysisKeyEnum.JOB_TYPE] = KeywordAnalysis(JobTypeEnum.MAPPING)
-        mapping[KeywordAnalysisKeyEnum.JOB_LEVEL] = KeywordAnalysis(JobLevelEnum.MAPPING)
-        mapping[KeywordAnalysisKeyEnum.JOB_ROLE] = KeywordAnalysis(JobRoleEnum.MAPPING)
-        mapping[KeywordAnalysisKeyEnum.REQUIRED_DEGREE] = KeywordAnalysis(RequiredDegreeEnum.MAPPING)
-        mapping[KeywordAnalysisKeyEnum.PROGRAMMING_LANGUAGE] = KeywordAnalysis(ProgrammingLanguageEnum.MAPPING)
-        mapping[KeywordAnalysisKeyEnum.FRAMEWORK] = KeywordAnalysis(FrameworkEnum.MAPPING)
-
-        for key, value in mapping.items():
-            value.runAnalysis(self.input)
-            result[key.value] = value.analysis
-        # self.salary = re.findall("\$\d+(?:,\d+)*(?:\.\d+)?[KMkkmMm]?|-?\$\d+(?:,\d+)*(?:-\d+)?[KMkkmMm]?",text)
-        # print(self.salary)
-
-        return result
-    
-    def printKeywordAnalysis(self):
-        print(self.keywordAnalysis)
 
 
 ### TEST ###
