@@ -26,8 +26,10 @@ class Analysis():
         for key, value in mapping.items():
             value.runAnalysis(self.input)
             result[key.value] = value.analysis
-        # self.salary = re.findall("\$\d+(?:,\d+)*(?:\.\d+)?[KMkkmMm]?|-?\$\d+(?:,\d+)*(?:-\d+)?[KMkkmMm]?",text)
-        # print(self.salary)
+        self.salary = re.findall("\$\d+(?:,\d+)*(?:\.\d+)?[KMkkmMm]?|-?\$\d+(?:,\d+)*(?:-\d+)?[KMkkmMm]?",text)
+        for value in self.salary:
+            if "M" in value:
+                self.salary.remove(value) 
 
         return result
     
