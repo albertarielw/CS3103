@@ -31,7 +31,6 @@ def mock_function(url):
         ip_addr="127.0.0.1",
         geolocation="local",
         next_urls=[],
-        html_file="",
         rtt=1.0,
     )
     return result
@@ -51,7 +50,9 @@ class TestTaskManager(unittest.TestCase):
         task_manager.start()
 
         # Assertions
-        self.assertEqual(self.db.get(0), "http://www.example.com,127.0.0.1,local,1.0")
+        self.assertEqual(
+            self.db.get(0), "http://www.example.com;;127.0.0.1;;local;;1.0"
+        )
         self.assertFalse(task_manager.timed_out())
 
 

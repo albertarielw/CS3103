@@ -1,14 +1,9 @@
 from multiprocessing import Pool, Queue, Value
-from typing import Callable, List
+from typing import Callable, List, Optional
 from functools import partial
 from dataclasses import dataclass
 from DB import Database, FileDB
 import time
-
-
-def result_callback(result, queue):
-    print(result, queue)
-    print(f"Callback got: {result}", flush=True)
 
 
 @dataclass
@@ -22,7 +17,6 @@ class TaskResult:
     ip_addr: str
     geolocation: str
     next_urls: List[str]
-    html_file: str
     rtt: float
 
 
@@ -37,7 +31,7 @@ class TaskManager:
     def __init__(
         self,
         db: Database,
-        function: Callable[[str], TaskResult],
+        function: Callable[[str], Optional[TaskResult]],
         seed: list[str],
         timeout: float = 10,
         num_procs: int = 10,
@@ -62,11 +56,18 @@ class TaskManager:
     def _callback(self, result):
         print(f"Callback: {result}", flush=True)
         self.queue.put(result)
-    
+
+    def _error_callback(self, e):
+        print("error in callback:", e)
+        raise e
+
     def _add_tasks(self, pool: Pool, tasks: List[str]) -> None:
         for task in tasks:
             pool.apply_async(
-                self.function, args=(task,), callback=self._callback
+                self.function,
+                args=(task,),
+                callback=self._callback,
+                error_callback=self._error_callback,
             )
 
     def start(self):
@@ -89,7 +90,7 @@ class TaskManager:
                 )
                 self.db.set(
                     self.task_id,
-                    f"{result.url},{result.ip_addr},{result.geolocation},{result.rtt}",
+                    f"{result.url};;{result.ip_addr};;{result.geolocation};;{result.rtt}",
                 )
                 self.task_id += 1
 
