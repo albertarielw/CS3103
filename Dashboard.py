@@ -2,59 +2,40 @@ import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
 
-# Pie chart, where the slices will be ordered and plotted counter-clockwise:
-labels = 'Frogs', 'Hogs', 'Dogs', 'Logs'
-sizes = [15, 30, 45, 10]
-explode = (0, 0.1, 0, 0)  # only "explode" the 2nd slice (i.e. 'Hogs')
+data = {'JOB_TYPE': {'Full Time': 51, 'Part Time': 88}, 'JOB_LEVEL': {'Intern': 9, 'Junior': 41, 'Senior': 99, 'Executive': 69}, 'REQUIRED_DEGREE': {'None': 40, 'Bachelor': 4, 'Graduate': 24, 'MASTER': 64, 'PHD': 31}, 'JOB_MODE': {'On-Site': 49, 'Remote': 27, 'Hybrid': 37}, 'JOB_ROLE': {'Software Engineer': 89, 'Quality Assurance': 56, 'Data Scientist': 17, 'Web Developer': 13, 'Frontend Developer': 33, 'Backend Developer': 24, 'Full Stack Developer': 29, 'Researcher': 79, 'Networking Engineer': 41, 'Test Engineer': 80, 'Machine Learning Engineer': 86, 'AI Engineer': 84, 'DevOps Engineer': 93, 'System Administrator': 11, 'Cloud Architect': 78, 'Database Administrator': 93, 'Security Analyst': 48, 'Mobile App Developer': 75, 'Game Developer': 71, 'UI/UX Designer': 16, 'Technical Support': 64, 'Product Manager': 66, 'IT Manager': 76}, 'COMMUNICATION': {'Collaboration': 7, 'Presentation': 86, 'Competitive': 63, 'Teamwork': 77, 'Leadership': 31, 'Creativity': 75, 'Conflict Resolution': 13, 'Ambitious': 67, 'Critical Thinking': 85, 'Time Management': 69, 'Problem Solving': 87, 'Enthusiasm': 29, 'Feedback Receptivity': 7, 'Attentiveness': 0}, 'PROGRAMMING_LANGUAGE': {'Java': 38, 'JavaScript': 14, 'C++': 49, 'Python': 3, 'SQL': 70, 'Ruby': 2, 'PHP': 92, 'C#': 61, 'Swift': 61, 'Go': 94, 'Perl': 23, 'Kotlin': 70, 'TypeScript': 5, 'HTML': 35, 'Dart': 46, 'COBOL': 94, 'Fortran': 95, 'Scala': 76, 'VHDL': 86, 'Lua': 3, 'Elixir': 57, 'MATLAB': 59, 'Haskell': 21, 'Objective-C': 37, 'Groovy': 95, 'Crystal': 69, 'CoffeeScript': 72, 'Erlang': 54, 'Coq': 0, 'Racket': 55, 'F#': 18, 'Perl 6': 3, 'Cool': 51, 'Scheme': 31, 'Prolog': 58, 'Ada': 100}, 'FRAMEWORK': {'React': 100, 'Django': 60, 'Laravel': 79, 'Spring Boot': 4, 'Vue.js': 13, 'Express.js': 96, 'Next.js': 21, 'Nuxt.js': 78, 'ASP.NET Core': 32, 'Ruby on Rails': 55, 'Svelte': 8, 'Angular': 25, 'Nest.js': 77, 'Koa.js': 61, 'Flutter': 82, 'React Native': 25, 'TensorFlow': 83, 'PyTorch': 26, 'PySpark': 5, 'Scikit-learn': 86, 'Keras': 12, 'Flask': 13, 'FastAPI': 12, 'Pyramid': 34, 'Catalyst': 97, 'CakePHP': 71, 'Yii': 50, 'CodeIgniter': 38, 'Symfony': 43, 'Zend Framework': 63, 'Laravel Mix': 10, 'Webpack': 38, 'Parcel': 77, 'Jest': 98, 'Cypress': 96, 'Mocha': 95, 'Enzyme': 41, 'Jasmine': 98, 'JUnit': 22, 'RSpec': 15, 'Capybara': 72, 'Cucumber': 41, 'Selenium': 5, 'Appium': 96, 'Docker': 10, 'Kubernetes': 36, 'Terraform': 3, 'Ansible': 34, 'Chef': 35, 'Puppet': 1}}
 
-fig1, ax1 = plt.subplots()
-ax1.pie(sizes, explode=explode, labels=labels, autopct='%1.1f%%',
-        shadow=True, startangle=90)
-ax1.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
+bar_chart_category = {}
+pie_chart_category = {}
 
-st.pyplot(fig1)
+pie_chart_category.update({"JOB_TYPE": data["JOB_TYPE"]})
+pie_chart_category.update({"JOB_LEVEL": data["JOB_LEVEL"]})
+pie_chart_category.update({"REQUIRED_DEGREE": data["REQUIRED_DEGREE"]})
+pie_chart_category.update({"JOB_MODE": data["JOB_MODE"]})
 
-sample = {'JOB_TYPE': {'Full Time': 1, 'Part Time': 0}, 'JOB_LEVEL': {'Intern': 1, 'Junior': 0, 'Senior': 0, 'Executive': 0}, 'JOB_ROLE': {'Software Engineer': 0, 'Quality Assurance': 0, 'Data Scientist': 0, 'Web Developer': 0, 'Frontend Developer': 1, 'Backend Developer': 1, 'Full Stack Developer': 1, 'Researcher': 0, 'Networking Engineer': 0, 'Test Engineer': 1, 'Machine Learning Engineer': 0, 'AI Engineer': 0, 'DevOps Engineer': 0, 'System Administrator': 0, 'Cloud Architect': 0, 'Database Administrator': 0, 'Security Analyst': 0, 'Mobile App Developer': 0, 'Game Developer': 0, 'UI/UX Designer': 0, 'Technical Support': 0, 'Product Manager': 0, 'IT Manager': 0}, 'REQUIRED_DEGREE': {'None': 0, 'Bachelor': 0, 'Graduate': 0, 'MASTER': 0, 'PHD': 0}, 'PROGRAMMING_LANGUAGE': {'Java': 0, 'JavaScript': 1, 'C++': 0, 'Python': 0, 'SQL': 0, 'Ruby': 0, 'PHP': 0, 'C#': 0, 'Swift': 0, 'Go': 0, 'Perl': 0, 'Kotlin': 0, 'TypeScript': 1, 'HTML': 0, 'Dart': 0, 'COBOL': 0, 'Fortran': 0, 'Scala': 0, 'VHDL': 0, 'Lua': 0, 'Elixir': 0, 'MATLAB': 0, 'Haskell': 0, 'Objective-C': 0, 'Groovy': 0, 'Crystal': 0, 'CoffeeScript': 0, 'Erlang': 0, 'Coq': 0, 'Racket': 0, 'F#': 0, 'Perl 6': 0, 'Cool': 0, 'Scheme': 0, 'Prolog': 0, 'Ada': 0}, 'FRAMEWORK': {'React': 0, 'Django': 0, 'Laravel': 0, 'Spring Boot': 0, 'Vue.js': 0, 'Express.js': 0, 'Next.js': 1, 'Nuxt.js': 0, 'ASP.NET Core': 0, 'Ruby on Rails': 0, 'Svelte': 0, 'Angular': 0, 'Nest.js': 1, 'Koa.js': 0, 'Flutter': 0, 'React Native': 0, 'TensorFlow': 0, 'PyTorch': 0, 'PySpark': 0, 'Scikit-learn': 0, 'Keras': 0, 'Flask': 0, 'FastAPI': 0, 'Pyramid': 0, 'Catalyst': 0, 'CakePHP': 0, 'Yii': 0, 'CodeIgniter': 0, 'Symfony': 0, 'Zend Framework': 0, 'Laravel Mix': 0, 'Webpack': 0, 'Parcel': 0, 'Jest': 0, 'Cypress': 0, 'Mocha': 0, 'Enzyme': 0, 'Jasmine': 0, 'JUnit': 0, 'RSpec': 0, 'Capybara': 0, 'Cucumber': 0, 'Selenium': 0, 'Appium': 0, 'Docker': 0, 'Kubernetes': 0, 'Terraform': 0, 'Ansible': 0, 'Chef': 0, 'Puppet': 0}}
 
-st.write("HELLO")
+bar_chart_category.update({"JOB_ROLE": data["JOB_ROLE"]})
+bar_chart_category.update({"COMMUNICATION": data["COMMUNICATION"]})
+bar_chart_category.update({"PROGRAMMING_LANGUAGE": data["PROGRAMMING_LANGUAGE"]})
+bar_chart_category.update({"FRAMEWORK": data["FRAMEWORK"]})
 
-df = pd.DataFrame(sample)
-#streamlit run c:\Users\Lenovo\OneDrive\Documents\CS3103\Dashboard.py
+for key in bar_chart_category:
+  temp = dict(sorted(bar_chart_category[key].items(), key=lambda x:x[1], reverse=True)[9:])
+  bar_chart_category[key] = dict(sorted(bar_chart_category[key].items(), key=lambda x:x[1], reverse=True)[:9])
+  bar_chart_category[key].update({"others":sum(list(temp.values()))})
 
-# Streamlit app
-st.title('Data Visualization')
 
-# Show the data as a DataFrame
-st.write('Sample Data:')
-st.write(df)
+bar_percentage = {}
+for key in bar_chart_category:
+  total = sum(bar_chart_category[key].values())
+  bar_percentage[key] = {k: v / total * 100 for k, v in bar_chart_category[key].items()}
 
-# Create a bar chart for JOB_TYPE
-st.bar_chart(df['JOB_TYPE'])
 
-# Create a bar chart for JOB_LEVEL
-st.bar_chart(df['JOB_LEVEL'])
+pie_percentage = {}
+for key in pie_chart_category:
+  total = sum(pie_chart_category[key].values())
+  pie_percentage[key] = {k: v / total * 100 for k, v in pie_chart_category[key].items()}
 
-# Create a bar chart for PROGRAMMING_LANGUAGE
-st.bar_chart(df['PROGRAMMING_LANGUAGE'])
-
-# Create a bar chart for FRAMEWORK
-st.bar_chart(df['FRAMEWORK'])
-
-st.title('Data Visualization')
-
-# Show the data as a DataFrame
-st.write('Sample Data:')
-st.write(df)
-
-# Create a bar chart for JOB_TYPE
-st.subheader('JOB_TYPE')
-st.bar_chart(df['JOB_TYPE'])
-
-# Create a horizontal bar chart for PROGRAMMING_LANGUAGE
-st.subheader('PROGRAMMING_LANGUAGE')
-st.bar_chart(df['PROGRAMMING_LANGUAGE'], use_container_width=True)
-
-for item_name, item_data in sample.items():
+for item_name, item_data in pie_percentage.items():
     # Extract labels and sizes for the pie chart
     filtered_data = {label: value for label, value in item_data.items() if value > 0}
     labels = list(filtered_data.keys())
@@ -68,3 +49,10 @@ for item_name, item_data in sample.items():
     # Display the pie chart in Streamlit
     st.subheader(item_name)
     st.pyplot(fig)
+
+# # Create a DataFrame for the data
+df = pd.DataFrame(bar_percentage)
+
+for item in bar_percentage:
+  st.subheader(item)
+  st.bar_chart(df[item])
