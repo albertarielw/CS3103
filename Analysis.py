@@ -209,6 +209,12 @@ class CommunicationSkillEnum(Enum):
     CREATIVITY = "Creativity"
     CONFLICT_RESOLUTION = "Conflict Resolution"
     AMBITIOUS = "Ambitious"
+    CRITICAL_THINKING = "Critical Thinking"
+    TIME_MANAGEMENT = "Time Management"
+    PROBLEM_SOLVING = "Problem Solving"
+    ENTHUSIASM = "Enthusiasm"
+    FEEDBACK_RECEPTIVITY = "Feedback Receptivity"
+    ATTENTIVENESS = "Attentiveness"
 
     COLLABORATION_KEYWORDS = ("collaborative", "cooperative", "collaboration")
     PRESENTATION_KEYWORDS = ("presentation", "public speaking")
@@ -218,6 +224,12 @@ class CommunicationSkillEnum(Enum):
     CREATIVITY_KEYWORDS = ("creative", "creativity")
     CONFLICT_RESOLUTION_KEYWORDS = ("conflict")
     AMBITIOUS_KEYWORDS = ("ambition", "ambitious")
+    CRITICAL_THINKING_KEYWORDS = ("critical")
+    TIME_MANAGEMENT_KEYWORDS = ("time", "prioritization", "prioritisation", "priority")
+    PROBLEM_SOLVING_KEYWORDS = ("problem solving", "problemsolving", "problem-solving", "problem solv")
+    ENTHUSIASM_KEYWORDS = ("enthu", "excited", "excitement")
+    FEEDBACK_RECEPTIVITY_KEYWORDS = ("feedback", "criticism", "critique")
+    ATTENTIVENESS_KEYWORDS = ("attention", "attentive")
 
     MAPPING = {
         COLLABORATION: COLLABORATION_KEYWORDS,
@@ -227,7 +239,13 @@ class CommunicationSkillEnum(Enum):
         LEADERSHIP: LEADERSHIP_KEYWORDS,
         CREATIVITY: CREATIVITY_KEYWORDS,
         CONFLICT_RESOLUTION: CONFLICT_RESOLUTION_KEYWORDS,
-        AMBITIOUS: AMBITIOUS_KEYWORDS
+        AMBITIOUS: AMBITIOUS_KEYWORDS,
+        CRITICAL_THINKING: CRITICAL_THINKING_KEYWORDS,
+        TIME_MANAGEMENT: TIME_MANAGEMENT_KEYWORDS,
+        PROBLEM_SOLVING: PROBLEM_SOLVING_KEYWORDS,
+        ENTHUSIASM: ENTHUSIASM_KEYWORDS,
+        FEEDBACK_RECEPTIVITY: FEEDBACK_RECEPTIVITY_KEYWORDS,
+        ATTENTIVENESS: ATTENTIVENESS_KEYWORDS
     }
 
 class FrameworkEnum(Enum):
