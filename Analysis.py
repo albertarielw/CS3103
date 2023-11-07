@@ -18,10 +18,13 @@ class Analysis():
         mapping = {}
         mapping[KeywordAnalysisKeyEnum.JOB_TYPE] = KeywordAnalysis(JobTypeEnum.MAPPING)
         mapping[KeywordAnalysisKeyEnum.JOB_LEVEL] = KeywordAnalysis(JobLevelEnum.MAPPING)
-        mapping[KeywordAnalysisKeyEnum.JOB_ROLE] = KeywordAnalysis(JobRoleEnum.MAPPING)
         mapping[KeywordAnalysisKeyEnum.REQUIRED_DEGREE] = KeywordAnalysis(RequiredDegreeEnum.MAPPING)
+        mapping[KeywordAnalysisKeyEnum.JOB_MODE] = KeywordAnalysis(JobModeEnum.MAPPING)
+        mapping[KeywordAnalysisKeyEnum.JOB_ROLE] = KeywordAnalysis(JobRoleEnum.MAPPING)
         mapping[KeywordAnalysisKeyEnum.PROGRAMMING_LANGUAGE] = KeywordAnalysis(ProgrammingLanguageEnum.MAPPING)
         mapping[KeywordAnalysisKeyEnum.FRAMEWORK] = KeywordAnalysis(FrameworkEnum.MAPPING)
+        # communication skills
+        # salary
 
         for key, value in mapping.items():
             value.runAnalysis(self.input)
@@ -61,6 +64,7 @@ class KeywordAnalysisKeyEnum(Enum):
     JOB_TYPE = "JOB_TYPE"
     JOB_LEVEL = "JOB_LEVEL"
     REQUIRED_DEGREE = "REQUIRED_DEGREE"
+    JOB_MODE = "JOB_MODE"
     JOB_ROLE = "JOB_ROLE"
     PROGRAMMING_LANGUAGE = "PROGRAMMING_LANGUAGE"
     FRAMEWORK = "FRAMEWORK"
@@ -101,6 +105,21 @@ class RequiredDegreeEnum(Enum):
     PHD_KEYWORDS = ("phd", "doctorate", "doctorofphilosophy", "doctor of philosophy")
 
     MAPPING = {NONE_REQUIRED: NONE_KEYWORDS, BACHELOR: BACHELOR_KEYWORDS, GRADUATE: GRADUATE_KEYWORDS, MASTER: MASTER_KEYWORDS, PHD: PHD_KEYWORDS}
+
+class JobModeEnum(Enum):
+    ONSITE = "On-Site"
+    REMOTE = "Remote"
+    HYBRID = "Hybrid"
+
+    ONSITE_KEYWORDS = ("onsite", "on-site", "in-office", "in office")
+    REMOTE_KEYWORDS = ("remote", "work from home", "telecommute")
+    HYBRID_KEYWORDS = ("hybrid", "on-site and remote", "on-site or remote", "onsite and remote", "onsite or remote")
+
+    MAPPING = {
+        ONSITE: ONSITE_KEYWORDS,
+        REMOTE: REMOTE_KEYWORDS,
+        HYBRID: HYBRID_KEYWORDS,
+    }
 
 class JobRoleEnum(Enum):
     SOFTWARE_ENGINEER = "Software Engineer"
