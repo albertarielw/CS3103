@@ -24,7 +24,6 @@ class Analysis():
         mapping[KeywordAnalysisKeyEnum.COMMUNICATION] = KeywordAnalysis(CommunicationSkillEnum.MAPPING)
         mapping[KeywordAnalysisKeyEnum.PROGRAMMING_LANGUAGE] = KeywordAnalysis(ProgrammingLanguageEnum.MAPPING)
         mapping[KeywordAnalysisKeyEnum.FRAMEWORK] = KeywordAnalysis(FrameworkEnum.MAPPING)
-        # communication skills
         # salary
 
         for key, value in mapping.items():
@@ -525,7 +524,8 @@ class ProgrammingLanguageEnum(Enum):
 
 ### TEST ###
 
-text = Get("https://jobs.polymer.co/whalesync/28574")
+# text = Get("https://jobs.polymer.co/whalesync/28574")
+text = Get("https://www.emergetools.com/careers/jobs/senior-android-engineer")
 htmlParser = HTMLParser(text)
 
 soup = htmlParser.GetSoup()
