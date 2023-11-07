@@ -18,10 +18,13 @@ class Analysis():
         mapping = {}
         mapping[KeywordAnalysisKeyEnum.JOB_TYPE] = KeywordAnalysis(JobTypeEnum.MAPPING)
         mapping[KeywordAnalysisKeyEnum.JOB_LEVEL] = KeywordAnalysis(JobLevelEnum.MAPPING)
-        mapping[KeywordAnalysisKeyEnum.JOB_ROLE] = KeywordAnalysis(JobRoleEnum.MAPPING)
         mapping[KeywordAnalysisKeyEnum.REQUIRED_DEGREE] = KeywordAnalysis(RequiredDegreeEnum.MAPPING)
+        mapping[KeywordAnalysisKeyEnum.JOB_MODE] = KeywordAnalysis(JobModeEnum.MAPPING)
+        mapping[KeywordAnalysisKeyEnum.JOB_ROLE] = KeywordAnalysis(JobRoleEnum.MAPPING)
+        mapping[KeywordAnalysisKeyEnum.COMMUNICATION] = KeywordAnalysis(CommunicationSkillEnum.MAPPING)
         mapping[KeywordAnalysisKeyEnum.PROGRAMMING_LANGUAGE] = KeywordAnalysis(ProgrammingLanguageEnum.MAPPING)
         mapping[KeywordAnalysisKeyEnum.FRAMEWORK] = KeywordAnalysis(FrameworkEnum.MAPPING)
+        # salary
 
         for key, value in mapping.items():
             value.runAnalysis(self.input)
@@ -61,7 +64,9 @@ class KeywordAnalysisKeyEnum(Enum):
     JOB_TYPE = "JOB_TYPE"
     JOB_LEVEL = "JOB_LEVEL"
     REQUIRED_DEGREE = "REQUIRED_DEGREE"
+    JOB_MODE = "JOB_MODE"
     JOB_ROLE = "JOB_ROLE"
+    COMMUNICATION = "COMMUNICATION"
     PROGRAMMING_LANGUAGE = "PROGRAMMING_LANGUAGE"
     FRAMEWORK = "FRAMEWORK"
 
@@ -101,6 +106,21 @@ class RequiredDegreeEnum(Enum):
     PHD_KEYWORDS = ("phd", "doctorate", "doctorofphilosophy", "doctor of philosophy")
 
     MAPPING = {NONE_REQUIRED: NONE_KEYWORDS, BACHELOR: BACHELOR_KEYWORDS, GRADUATE: GRADUATE_KEYWORDS, MASTER: MASTER_KEYWORDS, PHD: PHD_KEYWORDS}
+
+class JobModeEnum(Enum):
+    ONSITE = "On-Site"
+    REMOTE = "Remote"
+    HYBRID = "Hybrid"
+
+    ONSITE_KEYWORDS = ("onsite", "on-site", "in-office", "in office")
+    REMOTE_KEYWORDS = ("remote", "work from home", "telecommute")
+    HYBRID_KEYWORDS = ("hybrid", "on-site and remote", "on-site or remote", "onsite and remote", "onsite or remote")
+
+    MAPPING = {
+        ONSITE: ONSITE_KEYWORDS,
+        REMOTE: REMOTE_KEYWORDS,
+        HYBRID: HYBRID_KEYWORDS,
+    }
 
 class JobRoleEnum(Enum):
     SOFTWARE_ENGINEER = "Software Engineer"
@@ -177,6 +197,54 @@ class JobRoleEnum(Enum):
         TECH_SUPPORT: TECH_SUPPORT_KEYWORDS,
         PRODUCT_MANAGER: PRODUCT_MANAGER_KEYWORDS,
         IT_MANAGER: IT_MANAGER_KEYWORDS,
+    }
+
+class CommunicationSkillEnum(Enum):
+    COLLABORATION = "Collaboration"
+    PRESENTATION = "Presentation"
+    COMPETITIVE = "Competitive"
+    TEAMWORK = "Teamwork"
+    LEADERSHIP = "Leadership"
+    CREATIVITY = "Creativity"
+    CONFLICT_RESOLUTION = "Conflict Resolution"
+    AMBITIOUS = "Ambitious"
+    CRITICAL_THINKING = "Critical Thinking"
+    TIME_MANAGEMENT = "Time Management"
+    PROBLEM_SOLVING = "Problem Solving"
+    ENTHUSIASM = "Enthusiasm"
+    FEEDBACK_RECEPTIVITY = "Feedback Receptivity"
+    ATTENTIVENESS = "Attentiveness"
+
+    COLLABORATION_KEYWORDS = ("collaborative", "cooperative", "collaboration")
+    PRESENTATION_KEYWORDS = ("presentation", "public speaking")
+    COMPETITIVE_KEYWORDS = ("competitive", "competition")
+    TEAMWORK_KEYWORDS = ("team", "teamplayer", "team player", "team work")
+    LEADERSHIP_KEYWORDS = ("lead", "leadership", "leader")
+    CREATIVITY_KEYWORDS = ("creative", "creativity")
+    CONFLICT_RESOLUTION_KEYWORDS = ("conflict")
+    AMBITIOUS_KEYWORDS = ("ambition", "ambitious")
+    CRITICAL_THINKING_KEYWORDS = ("critical")
+    TIME_MANAGEMENT_KEYWORDS = ("time", "prioritization", "prioritisation", "priority")
+    PROBLEM_SOLVING_KEYWORDS = ("problem solving", "problemsolving", "problem-solving", "problem solv")
+    ENTHUSIASM_KEYWORDS = ("enthu", "excited", "excitement")
+    FEEDBACK_RECEPTIVITY_KEYWORDS = ("feedback", "criticism", "critique")
+    ATTENTIVENESS_KEYWORDS = ("attention", "attentive")
+
+    MAPPING = {
+        COLLABORATION: COLLABORATION_KEYWORDS,
+        PRESENTATION: PRESENTATION_KEYWORDS,
+        COMPETITIVE: COLLABORATION_KEYWORDS,
+        TEAMWORK: TEAMWORK_KEYWORDS,
+        LEADERSHIP: LEADERSHIP_KEYWORDS,
+        CREATIVITY: CREATIVITY_KEYWORDS,
+        CONFLICT_RESOLUTION: CONFLICT_RESOLUTION_KEYWORDS,
+        AMBITIOUS: AMBITIOUS_KEYWORDS,
+        CRITICAL_THINKING: CRITICAL_THINKING_KEYWORDS,
+        TIME_MANAGEMENT: TIME_MANAGEMENT_KEYWORDS,
+        PROBLEM_SOLVING: PROBLEM_SOLVING_KEYWORDS,
+        ENTHUSIASM: ENTHUSIASM_KEYWORDS,
+        FEEDBACK_RECEPTIVITY: FEEDBACK_RECEPTIVITY_KEYWORDS,
+        ATTENTIVENESS: ATTENTIVENESS_KEYWORDS
     }
 
 class FrameworkEnum(Enum):
@@ -456,7 +524,8 @@ class ProgrammingLanguageEnum(Enum):
 
 ### TEST ###
 
-text = Get("https://jobs.polymer.co/whalesync/28574")
+# text = Get("https://jobs.polymer.co/whalesync/28574")
+text = Get("https://www.emergetools.com/careers/jobs/senior-android-engineer")
 htmlParser = HTMLParser(text)
 
 soup = htmlParser.GetSoup()
