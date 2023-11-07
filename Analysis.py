@@ -21,6 +21,7 @@ class Analysis():
         mapping[KeywordAnalysisKeyEnum.REQUIRED_DEGREE] = KeywordAnalysis(RequiredDegreeEnum.MAPPING)
         mapping[KeywordAnalysisKeyEnum.JOB_MODE] = KeywordAnalysis(JobModeEnum.MAPPING)
         mapping[KeywordAnalysisKeyEnum.JOB_ROLE] = KeywordAnalysis(JobRoleEnum.MAPPING)
+        mapping[KeywordAnalysisKeyEnum.COMMUNICATION] = KeywordAnalysis(CommunicationSkillEnum.MAPPING)
         mapping[KeywordAnalysisKeyEnum.PROGRAMMING_LANGUAGE] = KeywordAnalysis(ProgrammingLanguageEnum.MAPPING)
         mapping[KeywordAnalysisKeyEnum.FRAMEWORK] = KeywordAnalysis(FrameworkEnum.MAPPING)
         # communication skills
@@ -66,6 +67,7 @@ class KeywordAnalysisKeyEnum(Enum):
     REQUIRED_DEGREE = "REQUIRED_DEGREE"
     JOB_MODE = "JOB_MODE"
     JOB_ROLE = "JOB_ROLE"
+    COMMUNICATION = "COMMUNICATION"
     PROGRAMMING_LANGUAGE = "PROGRAMMING_LANGUAGE"
     FRAMEWORK = "FRAMEWORK"
 
@@ -196,6 +198,36 @@ class JobRoleEnum(Enum):
         TECH_SUPPORT: TECH_SUPPORT_KEYWORDS,
         PRODUCT_MANAGER: PRODUCT_MANAGER_KEYWORDS,
         IT_MANAGER: IT_MANAGER_KEYWORDS,
+    }
+
+class CommunicationSkillEnum(Enum):
+    COLLABORATION = "Collaboration"
+    PRESENTATION = "Presentation"
+    COMPETITIVE = "Competitive"
+    TEAMWORK = "Teamwork"
+    LEADERSHIP = "Leadership"
+    CREATIVITY = "Creativity"
+    CONFLICT_RESOLUTION = "Conflict Resolution"
+    AMBITIOUS = "Ambitious"
+
+    COLLABORATION_KEYWORDS = ("collaborative", "cooperative", "collaboration")
+    PRESENTATION_KEYWORDS = ("presentation", "public speaking")
+    COMPETITIVE_KEYWORDS = ("competitive", "competition")
+    TEAMWORK_KEYWORDS = ("team", "teamplayer", "team player", "team work")
+    LEADERSHIP_KEYWORDS = ("lead", "leadership", "leader")
+    CREATIVITY_KEYWORDS = ("creative", "creativity")
+    CONFLICT_RESOLUTION_KEYWORDS = ("conflict")
+    AMBITIOUS_KEYWORDS = ("ambition", "ambitious")
+
+    MAPPING = {
+        COLLABORATION: COLLABORATION_KEYWORDS,
+        PRESENTATION: PRESENTATION_KEYWORDS,
+        COMPETITIVE: COLLABORATION_KEYWORDS,
+        TEAMWORK: TEAMWORK_KEYWORDS,
+        LEADERSHIP: LEADERSHIP_KEYWORDS,
+        CREATIVITY: CREATIVITY_KEYWORDS,
+        CONFLICT_RESOLUTION: CONFLICT_RESOLUTION_KEYWORDS,
+        AMBITIOUS: AMBITIOUS_KEYWORDS
     }
 
 class FrameworkEnum(Enum):
