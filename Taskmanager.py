@@ -6,6 +6,9 @@ from dataclasses import dataclass
 from DB import Database
 from Analysis import Analysis, AnalysisManager
 
+
+JSON_PATH = "analysis.json"
+
 @dataclass
 class TaskResult:
     """
@@ -106,9 +109,11 @@ class TaskManager:
                 self._add_tasks(task_pool, result.next_urls)
                 self.finished += 1
                 self.running += len(result.next_urls)
-
+        
         print("Terminating...")
+        self.tear_down()
     
     def tear_down(self): 
-        #TODO analysis manager stores to json file
-        pass
+        #analysis manager stores to json file
+        self.analysis_manager.store(JSON_PATH)
+        

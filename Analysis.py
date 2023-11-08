@@ -3,15 +3,15 @@ from HTMLParser import HTMLParser
 from enum import Enum
 from typing import Dict
 import re
-
+import json
 class Analysis():
-    def __init__(self, input):
-        self.input = self.parseInput(input)
+    def __init__(self, inp):
+        self.input = self.parseInput(inp)
         self.keywordAnalysis = self._runKeywordAnalysis()
         self.salary = None
 
-    def parseInput(self, input):
-        return input.lower().replace("\n", " ")
+    def parseInput(self, inp):
+        return inp.lower().replace("\n", " ")
 
     def _runKeywordAnalysis(self):
         result = {}
@@ -45,6 +45,7 @@ class AnalysisManager:
     """
     def __init__(self): 
         self.acc = Analysis("")
+
     
     def _merge_dict(self, d1, d2) -> Dict:
         return {key: (d1[key] + d2[key]) for key in d1}
@@ -55,7 +56,14 @@ class AnalysisManager:
         for key, val in dct1.items():
             result[key] = self._merge_dict(val, dct2[key])
         self.acc.keywordAnalysis = result
+    
+    def load(self, path: str) -> None: 
+        with open(path, 'r') as f:
+            self.acc.keywordAnalysis = json.load(f) 
 
+    def store(self, path: str) -> None: 
+        with open(path, 'w') as f:
+            json.dump(self.acc.keywordAnalysis, f, indent=4)
 class KeywordAnalysis():
     def __init__(self, mapping):
         self.mapping = mapping
