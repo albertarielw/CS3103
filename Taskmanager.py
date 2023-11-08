@@ -1,9 +1,9 @@
-from multiprocessing import Pool, Queue, Value
-from typing import Callable, List, Optional
-from functools import partial
-from dataclasses import dataclass
-from DB import Database, FileDB
+"""Contains Representation of task, task result, and the managers."""
 import time
+from multiprocessing import Pool, Queue
+from typing import Callable, List, Optional
+from dataclasses import dataclass
+from DB import Database
 
 
 @dataclass
