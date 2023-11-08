@@ -4,7 +4,7 @@ from multiprocessing import Pool, Queue
 from typing import Callable, List, Optional
 from dataclasses import dataclass
 from DB import Database
-
+from Analysis import Analysis, AnalysisManager
 
 @dataclass
 class TaskResult:
@@ -18,6 +18,7 @@ class TaskResult:
     geolocation: str
     next_urls: List[str]
     rtt: float
+    analysis: Analysis
 
 
 class TaskManager:
@@ -35,6 +36,7 @@ class TaskManager:
         seed: list[str],
         timeout: float = 10,
         num_procs: int = 10,
+        analysis_manager: AnalysisManager = AnalysisManager()
     ):
         self.function = function
         self.seed = seed
@@ -46,6 +48,8 @@ class TaskManager:
         self.task_id = 0
         self.running = len(seed)
         self.finished = 0
+        self.visited_urls = set()
+        self.analysis_manager = analysis_manager
 
     def timed_out(self) -> bool:
         """Check if timeout has been elapsed"""
@@ -63,6 +67,8 @@ class TaskManager:
 
     def _add_tasks(self, pool: Pool, tasks: List[str]) -> None:
         for task in tasks:
+            if task in self.visited_urls:
+                continue
             pool.apply_async(
                 self.function,
                 args=(task,),
@@ -88,10 +94,12 @@ class TaskManager:
                 print(
                     f"Task {self.task_id} finished, url: {result.url}, time taken: {result.rtt}"
                 )
+                self.visited_urls.add(result.ip_addr)
                 self.db.set(
                     self.task_id,
                     f"{result.url};;{result.ip_addr};;{result.geolocation};;{result.rtt}",
                 )
+                self.analysis_manager.add(result.analysis)
                 self.task_id += 1
 
                 # Process next urls
@@ -100,3 +108,7 @@ class TaskManager:
                 self.running += len(result.next_urls)
 
         print("Terminating...")
+    
+    def tear_down(self): 
+        #TODO analysis manager stores to json file
+        pass

@@ -1,6 +1,7 @@
 from HTTP import Get
 from HTMLParser import HTMLParser
 from enum import Enum
+from typing import Dict
 import re
 
 class Analysis():
@@ -36,6 +37,24 @@ class Analysis():
     
     def printKeywordAnalysis(self):
         print(self.keywordAnalysis)
+    
+class AnalysisManager:
+    """
+    A wrapper around Analysis class. 
+    Used to accumulate Analysis objects.  
+    """
+    def __init__(self): 
+        self.acc = Analysis("")
+    
+    def _merge_dict(self, d1, d2) -> Dict:
+        return {key: (d1[key] + d2[key]) for key in d1}
+
+    def add(self, analysis: Analysis) -> None:
+        result = {}
+        dct1, dct2 = self.acc.keywordAnalysis, analysis.keywordAnalysis
+        for key, val in dct1.items():
+            result[key] = self._merge_dict(val, dct2[key])
+        self.acc.keywordAnalysis = result
 
 class KeywordAnalysis():
     def __init__(self, mapping):
@@ -522,14 +541,14 @@ class ProgrammingLanguageEnum(Enum):
     }
 
 
-### TEST ###
+# ### TEST ###
 
-# text = Get("https://jobs.polymer.co/whalesync/28574")
-text = Get("https://www.emergetools.com/careers/jobs/senior-android-engineer")
-htmlParser = HTMLParser(text)
+# # text = Get("https://jobs.polymer.co/whalesync/28574")
+# text = Get("https://www.emergetools.com/careers/jobs/senior-android-engineer")
+# htmlParser = HTMLParser(text)
 
-soup = htmlParser.GetSoup()
-text = soup.get_text()
+# soup = htmlParser.GetSoup()
+# text = soup.get_text()
 
-analysis = Analysis(text)
-analysis.printKeywordAnalysis()
+# analysis = Analysis(text)
+# analysis.printKeywordAnalysis()
