@@ -8,6 +8,7 @@ DB_NAME = "database.txt"
 def main():
     seed = ["https://news.ycombinator.com/jobs"]
     crawler = Webcrawler()
+    # TODO optional: initialize AnalysisManager from a json file
     taskmanager = TaskManager(
         db=FileDB(DB_NAME),
         function=crawler.crawl,

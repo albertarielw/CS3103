@@ -28,7 +28,7 @@ class Webcrawler:
         next_urls = parser.GetLinks()
 
         soup = parser.GetSoup()
-        analysis = Analysis(soup.get_text)
+        analysis = Analysis(soup.get_text())
         ip_addr = self.get_ip_addr(url)
         address_info = DbIpCity.get(ip_addr, api_key="free")
         return TaskResult(
