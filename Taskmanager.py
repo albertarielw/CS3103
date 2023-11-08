@@ -6,6 +6,7 @@ from dataclasses import dataclass
 from DB import Database
 from Analysis import Analysis, AnalysisManager
 
+
 @dataclass
 class TaskResult:
     """
@@ -36,7 +37,7 @@ class TaskManager:
         seed: list[str],
         timeout: float = 10,
         num_procs: int = 10,
-        analysis_manager: AnalysisManager = AnalysisManager()
+        analysis_manager: AnalysisManager = AnalysisManager(),
     ):
         self.function = function
         self.seed = seed
@@ -69,6 +70,13 @@ class TaskManager:
         for task in tasks:
             if task in self.visited_urls:
                 continue
+
+            # Placeholder value, to differentiate between
+            # visited and unvisited urls
+            self.db.set(
+                self.task_id,
+                f"{task};;PENDING;;PENDING;;PENDING",
+            )
             pool.apply_async(
                 self.function,
                 args=(task,),
@@ -76,11 +84,24 @@ class TaskManager:
                 error_callback=self._error_callback,
             )
 
+    def _load_visited_urls(self):
+        for key in self.db.list_keys():
+            value = self.db.get(key)
+            url, ip_addr, _, _ = value.split(";;")
+            if ip_addr == "PENDING":
+                print("not processed yet")
+                continue
+            print("url", url)
+            self.visited_urls.add(url)
+
     def start(self):
         """
         Start a task pool, the master process will collect
         the result from queue and add more tasks to the pool
         """
+        self._load_visited_urls()
+        print(self.visited_urls)
+
         with Pool(self.num_procs) as task_pool:
             # map doesn't work somehow
             self._add_tasks(task_pool, self.seed)
@@ -108,7 +129,7 @@ class TaskManager:
                 self.running += len(result.next_urls)
 
         print("Terminating...")
-    
-    def tear_down(self): 
-        #TODO analysis manager stores to json file
+
+    def tear_down(self):
+        # TODO analysis manager stores to json file
         pass
