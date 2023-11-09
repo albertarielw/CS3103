@@ -36,10 +36,11 @@ class TaskManager:
     def __init__(
         self,
         db: Database,
+        analysis_manager: AnalysisManager,
         function: Callable[[str], Optional[TaskResult]],
-        timeout: float = 10,
+        timeout: float = 60,
         num_procs: int = 10,
-        analysis_manager: AnalysisManager = AnalysisManager(),
+        num_urls: int = 10000
     ):
         self.function = function
         self.timeout = timeout
@@ -53,6 +54,7 @@ class TaskManager:
         self.visited_urls = set()
         self.analysis_manager = analysis_manager
         self.pending_tasks_map = dict()
+        self.num_urls = num_urls
 
     def timed_out(self) -> bool:
         """Check if timeout has been elapsed"""
@@ -73,6 +75,7 @@ class TaskManager:
             if task in self.visited_urls:
                 continue
             self.running += 1
+            self.visited_urls.add(task)
             # Placeholder value, to differentiate between
             # visited and unvisited urls
             self.db.set(
@@ -120,11 +123,12 @@ class TaskManager:
                     break
 
                 result = self.queue.get(timeout=self.timeout)
+                if not result:
+                    continue 
                 task_id = self.pending_tasks_map[result.url]
                 print(
                     f"Task {task_id} finished, url: {result.url}, time taken: {result.rtt}"
                 )
-                self.visited_urls.add(result.ip_addr)
                 self.db.set(
                     task_id,
                     f"{result.url};;{result.ip_addr};;{result.geolocation};;{result.rtt}",
@@ -132,7 +136,8 @@ class TaskManager:
                 self.analysis_manager.add(result.analysis)
 
                 # Process next urls
-                self._add_tasks(task_pool, result.next_urls)
+                if self.curr_task_id < self.num_urls:
+                    self._add_tasks(task_pool, result.next_urls)
                 self.finished += 1
 
         print("Terminating...")
