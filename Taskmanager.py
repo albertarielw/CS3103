@@ -28,9 +28,6 @@ class TaskResult:
 class TaskManager:
     """
     Spawn a task pool to execute function specified in the constructor.
-
-    # Constructor argument and decorator is incomplete,
-    # function is expected to take a url string and Result Queue.
     """
 
     def __init__(
