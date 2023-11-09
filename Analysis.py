@@ -207,17 +207,15 @@ class RequiredDegreeEnum(Enum):
     """
     NONE_REQUIRED = "None"
     BACHELOR = "Bachelor"
-    GRADUATE = "Graduate"
     MASTER = "MASTER"
     PHD = "PHD"
 
     NONE_KEYWORDS = ("nodegree", "no degree")
     BACHELOR_KEYWORDS = ("bachelor", "ongoing", "currentstudent", "current student")
-    GRADUATE_KEYWORDS = ("graduate", "graduated")
     MASTER_KEYWORDS = ("master")
     PHD_KEYWORDS = ("phd", "doctorate", "doctorofphilosophy", "doctor of philosophy")
 
-    MAPPING = {NONE_REQUIRED: NONE_KEYWORDS, BACHELOR: BACHELOR_KEYWORDS, GRADUATE: GRADUATE_KEYWORDS, MASTER: MASTER_KEYWORDS, PHD: PHD_KEYWORDS}
+    MAPPING = {NONE_REQUIRED: NONE_KEYWORDS, BACHELOR: BACHELOR_KEYWORDS, MASTER: MASTER_KEYWORDS, PHD: PHD_KEYWORDS}
 
 class JobModeEnum(Enum):
     """
@@ -550,7 +548,6 @@ class ProgrammingLanguageEnum(Enum):
     FORTRAN = "Fortran"
     SCALA = "Scala"
     VHDL = "VHDL"
-    LUA = "Lua"
     ELIXIR = "Elixir"
     MATLAB = "MATLAB"
     HASKELL = "Haskell"
@@ -563,10 +560,8 @@ class ProgrammingLanguageEnum(Enum):
     RACKET = "Racket"
     F_SHARP = "F#"
     PERL_6 = "Perl 6"
-    COOL = "Cool"
     SCHEME = "Scheme"
     PROLOG = "Prolog"
-    ADA = "Ada"
 
     JAVA_KEYWORDS = ("java")
     JAVASCRIPT_KEYWORDS = ("js", "javascript")
@@ -577,7 +572,7 @@ class ProgrammingLanguageEnum(Enum):
     PHP_KEYWORDS = ("php")
     C_SHARP_KEYWORDS = ("c#", "csharp")
     SWIFT_KEYWORDS = ("swift")
-    GO_KEYWORDS = ("golang")
+    GO_KEYWORDS = ("golang", "go lang")
     PERL_KEYWORDS = ("perl")
     KOTLIN_KEYWORDS = ("kotlin")
     TYPESCRIPT_KEYWORDS = ("typescript", "ts")
@@ -587,7 +582,6 @@ class ProgrammingLanguageEnum(Enum):
     FORTRAN_KEYWORDS = ("fortran")
     SCALA_KEYWORDS = ("scala")
     VHDL_KEYWORDS = ("vhdl")
-    LUA_KEYWORDS = ("lua")
     ELIXIR_KEYWORDS = ("elixir")
     MATLAB_KEYWORDS = ("matlab")
     HASKELL_KEYWORDS = ("haskell")
@@ -600,10 +594,8 @@ class ProgrammingLanguageEnum(Enum):
     RACKET_KEYWORDS = ("racket")
     F_SHARP_KEYWORDS = ("f#")
     PERL_6_KEYWORDS = ("perl 6")
-    COOL_KEYWORDS = ("cool")
     SCHEME_KEYWORDS = ("scheme")
     PROLOG_KEYWORDS = ("prolog")
-    ADA_KEYWORDS = ("ada")
 
     MAPPING = {
         JAVA: JAVA_KEYWORDS,
@@ -625,7 +617,6 @@ class ProgrammingLanguageEnum(Enum):
         FORTRAN: FORTRAN_KEYWORDS,
         SCALA: SCALA_KEYWORDS,
         VHDL: VHDL_KEYWORDS,
-        LUA: LUA_KEYWORDS,
         ELIXIR: ELIXIR_KEYWORDS,
         MATLAB: MATLAB_KEYWORDS,
         HASKELL: HASKELL_KEYWORDS,
@@ -640,8 +631,6 @@ class ProgrammingLanguageEnum(Enum):
         RACKET: RACKET_KEYWORDS,
         F_SHARP: F_SHARP_KEYWORDS,
         PERL_6: PERL_6_KEYWORDS,
-        COOL: COOL_KEYWORDS,
         SCHEME: SCHEME_KEYWORDS,
-        PROLOG: PROLOG_KEYWORDS,
-        ADA: ADA_KEYWORDS,
+        PROLOG: PROLOG_KEYWORDS
     }

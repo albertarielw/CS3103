@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
 import json
+import numpy as np
 
  
 # Opening JSON file analysis.JSON which contains the aggregate info from key word analysis of html page from web crawling
@@ -17,7 +18,10 @@ f.close()
 bar_chart_category = {}
 pie_chart_category = {}
 
+filtered_dict = {k: v for (k, v) in data.items() if len(v) <9} 
+
 # Category for pie chart and bar chart respectively
+
 pie_category = ("JOB_TYPE", "JOB_LEVEL", "REQUIRED_DEGREE", "JOB_MODE")
 bar_category = ("JOB_ROLE", "COMMUNICATION", "PROGRAMMING_LANGUAGE", "FRAMEWORK")
 
@@ -29,27 +33,12 @@ for key in pie_category:
 for key in bar_category:
   bar_chart_category.update({key: data[key]})
 
-# For the bar chart categories which have lot of values, we take only the top 9 and collectively group the rest as 'others'
-for key in bar_chart_category:
-  temp = dict(sorted(bar_chart_category[key].items(), key=lambda x:x[1], reverse=True)[9:])
-  bar_chart_category[key] = dict(sorted(bar_chart_category[key].items(), key=lambda x:x[1], reverse=True)[:9])
-  bar_chart_category[key].update({"others":sum(list(temp.values()))})
-
-
-# Change the values into percentage for ease of looking for both bar and pie categories
-bar_percentage = {}
-for key in bar_chart_category:
-  total = sum(bar_chart_category[key].values())
-  bar_percentage[key] = {k: v / total * 100 for k, v in bar_chart_category[key].items()}
-
-
-pie_percentage = {}
-for key in pie_chart_category:
-  total = sum(pie_chart_category[key].values())
-  pie_percentage[key] = {k: v / total * 100 for k, v in pie_chart_category[key].items()}
+def func(pct, allvals):
+    absolute = int(np.round(pct/100.*np.sum(allvals)))
+    return f"{pct:.1f}%\n({absolute:d})"
 
 # Visualizing a pie chart for each category in bar_category
-for item_name, item_data in pie_percentage.items():
+for item_name, item_data in pie_chart_category.items():
     # Extract labels and sizes for the pie chart
     filtered_data = {label: value for label, value in item_data.items() if value > 0}
     labels = list(filtered_data.keys())
@@ -57,7 +46,7 @@ for item_name, item_data in pie_percentage.items():
 
     # Create a pie chart
     fig, ax = plt.subplots()
-    ax.pie(sizes, labels=labels, autopct='%1.1f%%', shadow=True, startangle=90)
+    ax.pie(sizes, labels=labels, autopct=lambda pct: func(pct,sizes), shadow=True, startangle=90)
     ax.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
 
     # Display the pie chart in Streamlit
@@ -65,9 +54,9 @@ for item_name, item_data in pie_percentage.items():
     st.pyplot(fig)
 
 # Create a DataFrame for the data
-df = pd.DataFrame(bar_percentage)
+df = pd.DataFrame(bar_chart_category)
 
 # Display the bar chart in streamlit
-for item in bar_percentage:
+for item in bar_chart_category:
   st.subheader(item)
   st.bar_chart(df[item])
