@@ -2,7 +2,7 @@ Code and Implementation Details:
 - please refer to 'readme.md'
 
 Analysis Report:
-- please refer to 'CS3103 report.pdf'
+- please refer to 'report/CS3103 report.pdf'
 
 Video Details:
-- please refer to 'webcrawler_video.mov'
+- please refer to 'vidoes/webcrawler_video.mov' (this video explains how the webcrawler script work) + 'videos/analysis_video.mp4' (this video explains how to run our analysis dashboard)
