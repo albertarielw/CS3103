@@ -26,8 +26,8 @@ venv/
 *.log
 *.sql
 *.sqlite
-*.txt
 *.json 
+database.txt
 
 # OS-specific files and directories
 .DS_Store
