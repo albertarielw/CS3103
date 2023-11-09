@@ -47,7 +47,7 @@ To start the web crawler, run the following command
 python main.py
 ```
 
-The script will start retrieving pages from the URLs and the result in the form of `id::url;;ip_address;;ip_address_geolocation;;response_time` will be added into `database.txt`. Additionally, a json file named `analysis.json` will be created that contains keyword analysis of the html files found so far. To interpret the result, read the content below. 
+The script will start retrieving pages from the URLs and the result in the form of `id::url;;ip_address;;ip_address_geolocation;;response_time` will be added into `database.txt`. Additionally, a json file named `analysis.json` will be created that contains keyword analysis of the html files found so far.
 
 #### Configuring the web crawler 
 To configure the crawler, go to `main.py` and change the following variables.
@@ -60,7 +60,23 @@ NUM_URLS = 10000 # maximum number of urls to visit
 
 
 
+## Implementation Details 
 
+#### Concurrency model 
+
+We are using master-worker paradigm with Python's `Task Pool` [multiprocessing.Pool](https://docs.python.org/3/library/multiprocessing.html#using-a-pool-of-workers) and `Synchronized Queue` [multiprocessing.Queue](https://docs.python.org/3/library/multiprocessing.html#pipes-and-queues). Initially, the master process (main process) spawns `num_procs` number of process within the `Task Pool` and queue all the seed URLs to the `Task Pool` to be processed. Below are the steps followed to process a URL: 
+- Master process sends the URL to the Task Pool. 
+- Result returned by the worker process is sent back to the master process. This result contains necessary data such as ip address, ip geolocation, analysis of the HTML page, as well as linked URLs from the page. 
+- The result will be written to database.txt by the master process, and analysis will be aggregated with the analysis of other pages. 
+- Linked URLs will be queued (again) to the Task Pool by the master process. 
+
+#### Inter-process communication 
+
+The worker processes need to send the result back to the master process and we are using message passing for communication between processes. Message passing allows us to avoid having to use synchronization primitives such as locks/mutexes. In this project, we are using Python's [multiprocessing.Queue](https://docs.python.org/3/library/multiprocessing.html#pipes-and-queues) that is multi-producer, multi-consumer FIFO queues, i.e. this queue implementation is already synchronized among processes. 
+
+#### Coordinated write to DB 
+
+The only process that have access to the DB is the master process. While the worker process are processing the URLs, the master process will write the result into the database.txt file. Hence, we are using implicit synchronization as we use Python's Synchonized Queue [multiprocessing.Queue](https://docs.python.org/3/library/multiprocessing.html#pipes-and-queues) that is shared among processes to send the result back to the master process. 
 
 
 
