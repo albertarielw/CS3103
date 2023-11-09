@@ -1,0 +1,8 @@
+Code and Implementation Details:
+- please refer to 'readme.md'
+
+Analysis Report:
+- please refer to 'CS3103 report.pdf'
+
+Video Details:
+- please refer to 'webcrawler_video.mov'
