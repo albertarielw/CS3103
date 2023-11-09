@@ -1,7 +1,7 @@
 from Taskmanager import TaskManager, JSON_PATH
 from Webcrawler import Webcrawler
 from DB import FileDB
-from pathlib import Path 
+from pathlib import Path
 from Analysis import AnalysisManager
 import signal
 import sys
@@ -12,9 +12,11 @@ DB_NAME = "database.txt"
 def main():
     crawler = Webcrawler()
     analysis_manager = AnalysisManager()
+
+    # check if JSON file exists and load data if it does
     if Path(JSON_PATH).is_file():
-        analysis_manager.load(JSON_PATH) 
-    
+        analysis_manager.load(JSON_PATH)
+
     taskmanager = TaskManager(
         db=FileDB(DB_NAME),
         analysis_manager=analysis_manager,
@@ -28,6 +30,7 @@ def main():
         taskmanager.tear_down()
         sys.exit(0)
 
+    # register signal handler for keyboard interrupt (Ctrl+C)
     signal.signal(signal.SIGINT, signal_handler)
 
     try:
@@ -35,7 +38,8 @@ def main():
     except KeyboardInterrupt:
         taskmanager.tear_down()
     except Exception as e:
-        print(f"error: {e}") 
+        print(f"error: {e}")
+
 
 if __name__ == "__main__":
     main()
