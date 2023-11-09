@@ -64,10 +64,10 @@ NUM_URLS = 10000 # maximum number of urls to visit
 
 #### Concurrency model 
 
-We are using master-worker paradigm with Python's `Task Pool` [multiprocessing.Pool](https://docs.python.org/3/library/multiprocessing.html#using-a-pool-of-workers) and `Synchronized Queue` [multiprocessing.Queue](https://docs.python.org/3/library/multiprocessing.html#pipes-and-queues). Initially, the master process (main process) spawns `num_procs` number of process within the `Task Pool` and queue all the seed URLs to the `Task Pool` to be processed. Below are the steps followed to process a URL: 
+We are using master-worker paradigm with Python's `Task Pool` [multiprocessing.Pool](https://docs.python.org/3/library/multiprocessing.html#using-a-pool-of-workers) and `Synchronized Queue` [multiprocessing.Queue](https://docs.python.org/3/library/multiprocessing.html#pipes-and-queues). Initially, the master process (main process) spawns `num_procs` number of processes within the `Task Pool` and queue all the seed URLs to the `Task Pool`. Below are the steps followed to process a URL: 
 - Master process sends the URL to the Task Pool. 
-- Result returned by the worker process is sent back to the master process. This result contains necessary data such as ip address, ip geolocation, analysis of the HTML page, as well as linked URLs from the page. 
-- The result will be written to database.txt by the master process, and analysis will be aggregated with the analysis of other pages. 
+- Result returned by the worker process is sent back to the master process. This result contains all the necessary data such as ip address, ip geolocation, response time, analysis of the HTML page, as well as linked URLs from the page. 
+- The result will be written to database.txt by the master process while the analysis will be aggregated with the analysis of other pages. 
 - Linked URLs will be queued (again) to the Task Pool by the master process. 
 
 #### Inter-process communication 
