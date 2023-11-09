@@ -2,20 +2,41 @@ from HTTP import Get
 from HTMLParser import HTMLParser
 from enum import Enum
 from typing import Dict
-import re
 import json
+
 class Analysis():
     def __init__(self, inp):
-        self.input = self.parseInput(inp)
-        self.keywordAnalysis = self._runKeywordAnalysis()
-        self.salary = None
+        """
+        Initializes an Analysis instance with input data and keyword analysis results.
 
-    def parseInput(self, inp):
+        Args:
+            inp (str): The input data for analysis.
+        """
+        self.input = self._parseInput(inp)
+        self.keywordAnalysis = self._runKeywordAnalysis()
+
+    def _parseInput(self, inp):
+        """
+        Cleans and normalizes the input data by converting it to lowercase and replacing newline characters.
+
+        Args:
+            inp (str): The input data to be cleaned.
+
+        Returns:
+            str: The cleaned and normalized input data.
+        """
         return inp.lower().replace("\n", " ")
 
     def _runKeywordAnalysis(self):
+        """
+        Runs keyword analysis on the cleaned input data for various categories and returns the results.
+
+        Returns:
+            dict: A dictionary containing keyword analysis results for different categories.
+        """
         result = {}
 
+        # Define a mapping of keyword analysis categories to their respective enums.
         mapping = {}
         mapping[KeywordAnalysisKeyEnum.JOB_TYPE] = KeywordAnalysis(JobTypeEnum.MAPPING)
         mapping[KeywordAnalysisKeyEnum.JOB_LEVEL] = KeywordAnalysis(JobLevelEnum.MAPPING)
@@ -25,32 +46,50 @@ class Analysis():
         mapping[KeywordAnalysisKeyEnum.COMMUNICATION] = KeywordAnalysis(CommunicationSkillEnum.MAPPING)
         mapping[KeywordAnalysisKeyEnum.PROGRAMMING_LANGUAGE] = KeywordAnalysis(ProgrammingLanguageEnum.MAPPING)
         mapping[KeywordAnalysisKeyEnum.FRAMEWORK] = KeywordAnalysis(FrameworkEnum.MAPPING)
-        # salary
 
+        # Run keyword analysis for each category and store the results in the 'result' dictionary.
         for key, value in mapping.items():
             value.runAnalysis(self.input)
             result[key.value] = value.analysis
-        # self.salary = re.findall("\$\d+(?:,\d+)*(?:\.\d+)?[KMkkmMm]?|-?\$\d+(?:,\d+)*(?:-\d+)?[KMkkmMm]?",text)
-        # print(self.salary)
 
         return result
     
     def printKeywordAnalysis(self):
+        """
+        Prints the keyword analysis results to the console.
+        """
         print(self.keywordAnalysis)
     
 class AnalysisManager:
     """
-    A wrapper around Analysis class. 
-    Used to accumulate Analysis objects.  
+    A wrapper around the Analysis class. Used to accumulate Analysis objects and manage their data.
     """
     def __init__(self): 
+        """
+        Initializes an AnalysisManager instance with an empty Analysis object.
+        """
         self.acc = Analysis("")
-
     
     def _merge_dict(self, d1, d2) -> Dict:
+        """
+        Merges two dictionaries by adding values of common keys and returns the merged dictionary.
+
+        Args:
+            d1 (dict): The first dictionary to merge.
+            d2 (dict): The second dictionary to merge.
+
+        Returns:
+            dict: The merged dictionary with values summed for common keys.
+        """
         return {key: (d1[key] + d2[key]) for key in d1}
 
     def add(self, analysis: Analysis) -> None:
+        """
+        Adds the keyword analysis results from another Analysis object to the accumulated Analysis object.
+
+        Args:
+            analysis (Analysis): The Analysis object to add.
+        """
         result = {}
         dct1, dct2 = self.acc.keywordAnalysis, analysis.keywordAnalysis
         for key, val in dct1.items():
@@ -58,24 +97,58 @@ class AnalysisManager:
         self.acc.keywordAnalysis = result
     
     def load(self, path: str) -> None: 
+        """
+        Loads keyword analysis data from a file and updates the accumulated Analysis object.
+
+        Args:
+            path (str): The path to the file containing the keyword analysis data (in JSON format).
+        """
         with open(path, 'r') as f:
             self.acc.keywordAnalysis = json.load(f) 
 
     def store(self, path: str) -> None: 
+        """
+        Stores the accumulated keyword analysis data to a file in JSON format.
+
+        Args:
+            path (str): The path to the file where the data will be stored.
+        """
         with open(path, 'w') as f:
             json.dump(self.acc.keywordAnalysis, f, indent=4)
+        
 class KeywordAnalysis():
+    """
+    Performs keyword analysis for a specific category based on provided mappings.
+    """
     def __init__(self, mapping):
+        """
+        Initializes a KeywordAnalysis instance with a mapping for the category.
+
+        Args:
+            mapping (MappingEnum): The mapping for the category.
+        """
         self.mapping = mapping
         self.analysis = self._setupAnalysis()
         
     def _setupAnalysis(self):
+        """
+        Sets up the initial analysis results as a dictionary with keys from the mapping and initial values set to 0.
+
+        Returns:
+            dict: The initial analysis results for the category.
+        """
         initial_analysis = {}
         for key in self.mapping.value.keys():
             initial_analysis[key] = 0
         return initial_analysis
 
     def runAnalysis(self, input):
+        """
+        Performs keyword analysis on the input data for the category and updates the analysis results.
+
+        Args:
+            input (str): The input data for analysis.
+        """
         for key, keywords in self.mapping.value.items():
             if type(keywords) == type(""):
                 if keywords in input:
@@ -88,6 +161,9 @@ class KeywordAnalysis():
                         break
 
 class KeywordAnalysisKeyEnum(Enum):
+    """
+    Enum representing the possible keys for keyword analysis categories.
+    """
     JOB_TYPE = "JOB_TYPE"
     JOB_LEVEL = "JOB_LEVEL"
     REQUIRED_DEGREE = "REQUIRED_DEGREE"
@@ -98,6 +174,9 @@ class KeywordAnalysisKeyEnum(Enum):
     FRAMEWORK = "FRAMEWORK"
 
 class JobTypeEnum(Enum):
+    """
+    Enum representing job types along with their associated keywords for analysis.
+    """
     FULLTIME = "Full Time"
     PARTTIME = "Part Time"
 
@@ -107,6 +186,9 @@ class JobTypeEnum(Enum):
     MAPPING = {FULLTIME: FULLTIME_KEYWORDS, PARTTIME: PARTTIME_KEYWORDS}
 
 class JobLevelEnum(Enum):
+    """
+    Enum representing job levels along with their associated keywords for analysis.
+    """
     INTERN = "Intern"
     JUNIOR = "Junior"
     SENIOR = "Senior"
@@ -120,6 +202,9 @@ class JobLevelEnum(Enum):
     MAPPING = {INTERN: INTERN_KEYWORDS, JUNIOR: JUNIOR_KEYWORDS, SENIOR: SENIOR_KEYWORDS, EXECUTIVE: EXECUTIVE_KEYWORDS}
 
 class RequiredDegreeEnum(Enum):
+    """
+    Enum representing required degree types along with their associated keywords for analysis.
+    """
     NONE_REQUIRED = "None"
     BACHELOR = "Bachelor"
     GRADUATE = "Graduate"
@@ -135,6 +220,9 @@ class RequiredDegreeEnum(Enum):
     MAPPING = {NONE_REQUIRED: NONE_KEYWORDS, BACHELOR: BACHELOR_KEYWORDS, GRADUATE: GRADUATE_KEYWORDS, MASTER: MASTER_KEYWORDS, PHD: PHD_KEYWORDS}
 
 class JobModeEnum(Enum):
+    """
+    Enum representing job modes along with their associated keywords for analysis.
+    """
     ONSITE = "On-Site"
     REMOTE = "Remote"
     HYBRID = "Hybrid"
@@ -150,6 +238,9 @@ class JobModeEnum(Enum):
     }
 
 class JobRoleEnum(Enum):
+    """
+    Enum representing job roles along with their associated keywords for analysis.
+    """
     SOFTWARE_ENGINEER = "Software Engineer"
     QUALITY_ASSURANCE = "Quality Assurance"
     DATA_SCIENTIST = "Data Scientist"
@@ -174,8 +265,7 @@ class JobRoleEnum(Enum):
     PRODUCT_MANAGER = "Product Manager"
     IT_MANAGER = "IT Manager"
 
-    # Define keywords for each job role
-    SOFTWARE_ENGINEER_KEYWORDS = ("softeng", "softwareengineer", "softwaredeveloper")
+    SOFTWARE_ENGINEER_KEYWORDS = ("softeng", "software")
     QUALITY_ASSURANCE_KEYWORDS = ("qa", "qualityassurance")
     DATA_SCIENTIST_KEYWORDS = ("datascientist", "dataanalyst")
     WEBDEV_KEYWORDS = ("webdeveloper", "webdev")
@@ -199,7 +289,6 @@ class JobRoleEnum(Enum):
     PRODUCT_MANAGER_KEYWORDS = ("productmanager", "productowner")
     IT_MANAGER_KEYWORDS = ("itmanager", "itdirector")
 
-    # Create a mapping of job roles to their associated keywords
     MAPPING = {
         SOFTWARE_ENGINEER: SOFTWARE_ENGINEER_KEYWORDS,
         QUALITY_ASSURANCE: QUALITY_ASSURANCE_KEYWORDS,
@@ -227,6 +316,9 @@ class JobRoleEnum(Enum):
     }
 
 class CommunicationSkillEnum(Enum):
+    """
+    Enum representing communication skills along with their associated keywords for analysis.
+    """
     COLLABORATION = "Collaboration"
     PRESENTATION = "Presentation"
     COMPETITIVE = "Competitive"
@@ -275,6 +367,9 @@ class CommunicationSkillEnum(Enum):
     }
 
 class FrameworkEnum(Enum):
+    """
+    Enum representing tech frameworks along with their associated keywords for analysis.
+    """
     REACT = "React"
     DJANGO = "Django"
     LARAVEL = "Laravel"
@@ -433,6 +528,9 @@ class FrameworkEnum(Enum):
     }
 
 class ProgrammingLanguageEnum(Enum):
+    """
+    Enum representing programming languages along with their associated keywords for analysis.
+    """
     JAVA = "Java"
     JAVASCRIPT = "JavaScript"
     CPP = "C++"
@@ -547,16 +645,3 @@ class ProgrammingLanguageEnum(Enum):
         PROLOG: PROLOG_KEYWORDS,
         ADA: ADA_KEYWORDS,
     }
-
-
-# ### TEST ###
-
-# # text = Get("https://jobs.polymer.co/whalesync/28574")
-# text = Get("https://www.emergetools.com/careers/jobs/senior-android-engineer")
-# htmlParser = HTMLParser(text)
-
-# soup = htmlParser.GetSoup()
-# text = soup.get_text()
-
-# analysis = Analysis(text)
-# analysis.printKeywordAnalysis()
