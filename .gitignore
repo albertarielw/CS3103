@@ -27,6 +27,8 @@ venv/
 *.sql
 *.sqlite
 *.txt
+*.json 
+
 # OS-specific files and directories
 .DS_Store
 Thumbs.db

@@ -1,9 +1,13 @@
-from multiprocessing import Pool, Queue, Value
-from typing import Callable, List, Optional
-from functools import partial
-from dataclasses import dataclass
-from DB import Database, FileDB
+"""Contains Representation of task, task result, and the managers."""
 import time
+from multiprocessing import Pool, Queue
+from typing import Callable, List, Optional
+from dataclasses import dataclass
+from DB import Database
+from Analysis import Analysis, AnalysisManager
+
+
+JSON_PATH = "analysis.json"
 
 
 @dataclass
@@ -18,6 +22,7 @@ class TaskResult:
     geolocation: str
     next_urls: List[str]
     rtt: float
+    analysis: Analysis
 
 
 class TaskManager:
@@ -32,20 +37,22 @@ class TaskManager:
         self,
         db: Database,
         function: Callable[[str], Optional[TaskResult]],
-        seed: list[str],
         timeout: float = 10,
         num_procs: int = 10,
+        analysis_manager: AnalysisManager = AnalysisManager(),
     ):
         self.function = function
-        self.seed = seed
         self.timeout = timeout
         self.num_procs = num_procs
         self.queue: Queue[TaskResult] = Queue()
         self.db = db
         self.start_time = time.time()
-        self.task_id = 0
-        self.running = len(seed)
+        self.curr_task_id = 0
+        self.running = 0
         self.finished = 0
+        self.visited_urls = set()
+        self.analysis_manager = analysis_manager
+        self.pending_tasks_map = dict()
 
     def timed_out(self) -> bool:
         """Check if timeout has been elapsed"""
@@ -63,6 +70,18 @@ class TaskManager:
 
     def _add_tasks(self, pool: Pool, tasks: List[str]) -> None:
         for task in tasks:
+            if task in self.visited_urls:
+                continue
+            self.running += 1
+            # Placeholder value, to differentiate between
+            # visited and unvisited urls
+            self.db.set(
+                self.curr_task_id,
+                f"{task};;PENDING;;PENDING;;PENDING",
+            )
+            self.pending_tasks_map[task] = self.curr_task_id
+            self.curr_task_id += 1
+
             pool.apply_async(
                 self.function,
                 args=(task,),
@@ -70,33 +89,55 @@ class TaskManager:
                 error_callback=self._error_callback,
             )
 
+    def _load_url_db(self):
+        to_visit = []
+        for key in self.db.list_keys():
+            value = self.db.get(key)
+            url, ip_addr, _, _ = value.split(";;")
+            if ip_addr != "PENDING":
+                self.visited_urls.add(url)
+            else:
+                print("not processed yet:", url)
+                to_visit.append(url)
+        return to_visit
+
     def start(self):
         """
         Start a task pool, the master process will collect
         the result from queue and add more tasks to the pool
         """
+        seed = self._load_url_db()
+        print(self.visited_urls, seed)
+        self.curr_task_id = len(self.visited_urls)
+
         with Pool(self.num_procs) as task_pool:
             # map doesn't work somehow
-            self._add_tasks(task_pool, self.seed)
-
-            while self.finished < self.running:
+            self._add_tasks(task_pool, seed)
+            print(self.finished, self.running)
+            while True:
                 # Check if it has timed out
                 if self.timed_out():
                     break
 
                 result = self.queue.get(timeout=self.timeout)
+                task_id = self.pending_tasks_map[result.url]
                 print(
-                    f"Task {self.task_id} finished, url: {result.url}, time taken: {result.rtt}"
+                    f"Task {task_id} finished, url: {result.url}, time taken: {result.rtt}"
                 )
+                self.visited_urls.add(result.ip_addr)
                 self.db.set(
-                    self.task_id,
+                    task_id,
                     f"{result.url};;{result.ip_addr};;{result.geolocation};;{result.rtt}",
                 )
-                self.task_id += 1
+                self.analysis_manager.add(result.analysis)
 
                 # Process next urls
                 self._add_tasks(task_pool, result.next_urls)
                 self.finished += 1
-                self.running += len(result.next_urls)
 
         print("Terminating...")
+        self.tear_down()
+
+    def tear_down(self):
+        # analysis manager stores to json file
+        self.analysis_manager.store(JSON_PATH)
