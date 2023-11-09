@@ -40,7 +40,7 @@ class TaskManager:
         function: Callable[[str], Optional[TaskResult]],
         timeout: float = 60,
         num_procs: int = 10,
-        num_urls: int = 10000
+        num_urls: int = 10000,
     ):
         self.function = function
         self.timeout = timeout
@@ -109,25 +109,27 @@ class TaskManager:
         Start a task pool, the master process will collect
         the result from queue and add more tasks to the pool
         """
+        # load existing urls from db
         seed = self._load_url_db()
         print(self.visited_urls, seed)
         self.curr_task_id = len(self.visited_urls)
 
         with Pool(self.num_procs) as task_pool:
-            # map doesn't work somehow
+            # add initial set of urls to task pool
             self._add_tasks(task_pool, seed)
-            print(self.finished, self.running)
+
             while True:
-                # Check if it has timed out
+                # check if it has timed out
                 if self.timed_out():
                     break
 
                 result = self.queue.get(timeout=self.timeout)
                 if not result:
-                    continue 
+                    # skip if no result is available
+                    continue
                 task_id = self.pending_tasks_map[result.url]
                 print(
-                    f"Task {task_id} finished, url: {result.url}, time taken: {result.rtt}"
+                    f"task {task_id} finished, url: {result.url}, time taken: {result.rtt}"
                 )
                 self.db.set(
                     task_id,
@@ -135,12 +137,12 @@ class TaskManager:
                 )
                 self.analysis_manager.add(result.analysis)
 
-                # Process next urls
+                # process next urls
                 if self.curr_task_id < self.num_urls:
                     self._add_tasks(task_pool, result.next_urls)
                 self.finished += 1
 
-        print("Terminating...")
+        print("terminating...")
         self.tear_down()
 
     def tear_down(self):
