@@ -27,7 +27,6 @@ venv/
 *.sql
 *.sqlite
 analysis.json 
-database.txt
 
 # OS-specific files and directories
 .DS_Store
