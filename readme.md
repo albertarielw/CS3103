@@ -39,7 +39,7 @@ example of initial state of `database.txt`:
 1::https://news.ycombinator.com/jobs?next=37945432;;PENDING;;PENDING;;PENDING
 ```
 
-#### Running the script 
+#### Running the web crawler script 
 
 To start the web crawler, run the following command 
 
@@ -49,6 +49,20 @@ python main.py
 
 The script will start retrieving pages from the URLs and the result in the form of `id::url;;ip_address;;ip_address_geolocation;;response_time` will be added into `database.txt`. Additionally, a json file named `analysis.json` will be created that contains keyword analysis of the html files found so far.
 
+#### Running analysis visualisation
+
+To run the dashboard for analysis visualisation, run the following command
+
+```bash 
+streamlit run Dashboard.py
+```
+
+Note:
+- This command is for macOS, for other environments please refer to [https://docs.streamlit.io/library/get-started](https://docs.streamlit.io/library/get-started)
+- If you have not run the web crawler script (and thus `analysis.json` is not created yet), data will be loaded from `sample.json`
+- Sample visualisation is provided in: [charts.pdf](./charts.pdf)
+
+
 #### Configuring the web crawler 
 To configure the crawler, go to `main.py` and change the following variables.
 
@@ -57,8 +71,6 @@ TIMEOUT = 600 # timeout in second until the crawler terminate
 NUM_PROCS = 10 # number of process spawned (excluding the main process)
 NUM_URLS = 10000 # maximum number of urls to visit 
 ```
-
-
 
 ## Implementation Details 
 
@@ -78,7 +90,13 @@ The worker processes need to send the result back to the master process and we a
 
 The only process that have access to the DB is the master process. While the worker process are processing the URLs, the master process will write the result into the database.txt file. Hence, we are using implicit synchronization as we use Python's Synchonized Queue [multiprocessing.Queue](https://docs.python.org/3/library/multiprocessing.html#pipes-and-queues) that is shared among processes to send the result back to the master process. 
 
+#### Analysis 
 
+The analysis process is designed to explore and quantify the prominence of various aspects related to job postings within the Computer Science industry, such as job roles, job modes, programming language, technology framework and many more. To achieve this, the code conducts keyword analysis for each job posting page, systematically examining the presence of specific keywords associated with these attributes. For example, in the context of job roles, a set of keywords is defined for each job role, and if any of these keywords are found on a job posting page, it's considered as a mention of that job role. The accumulation of these mentions is done across a sample of web crawled pages, enabling the determination of the relative popularity of different job roles and other categories. After each analysis, the result file is updated using a mutex to prevent data race, ensuring the integrity and consistency of the collected data. This approach provides valuable insights into which job attributes are most frequently mentioned in job postings, helping to identify trends and patterns in the Computer Science job market.
+
+#### Dashboard for Analysis Visualisation
+
+The visualization process is designed to present data obtained from the analysis of HTML pages acquired through web crawling. It reads the `analysis.json` file, which contains aggregated data resulting from keyword analysis, and generates bar and pie charts using the Streamlit and Matplotlib libraries. For clarity and ease of comprehension, categories with fewer than 9 values are represented as pie charts, while categories with 9 or more values are visualized as bar charts, displaying only the top 9 values. This visualization process aims to enhance the reader's understanding of the data and improve the report's overall clarity. The decision to display only the top 9 values in the visualization is based on considerations of relevance, clarity, visual impact, and focus, ensuring that the audience can better discern the most significant data points, thereby aiding in the extraction of meaningful insights from the data presentation.
 
 ## Contributors 
 

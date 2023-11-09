@@ -10,7 +10,7 @@ f = None
 try :
   f = open(r'./analysis.json')
 except Exception:
-  print("analysis.json file not found")
+  print("analysis.json file is not found. This is because your webcrawler process had not been run yet. Data will be loaded from sample.json.")
   f = open(r'./sample.json')
 
 
